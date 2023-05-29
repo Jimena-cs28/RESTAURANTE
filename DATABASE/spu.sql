@@ -19,6 +19,14 @@ END$$
 CALL spu_login('SaidiA@gmail.com');
 
 DELIMITER $$
+CREATE PROCEDURE spu_listarturno()
+BEGIN
+	SELECT * FROM turnos;
+END $$
+
+CALL spu_listarturno()
+
+DELIMITER $$
 CREATE PROCEDURE spu_listar_venta()
 BEGIN
 	SELECT ventas.`idventa`,  
@@ -27,7 +35,8 @@ BEGIN
 			comidas.`comidas`,
 			PrecioUni,
 			NumMesa,
-			cantidad, totalPagar
+			cantidad, 
+			totalPagar
 	FROM ventas
 	INNER JOIN turnos ON turnos.idturno = ventas.`idturno`
 	INNER JOIN comidas ON comidas.idcomida = ventas.`idcomida`
@@ -49,8 +58,10 @@ BEGIN
 	(_idturno,_idcomida,_PrecioUni,_numMesa,_cantidad, _totalPagar);
 END$$ 
 
+SELECT nombres,apellidos
+FROM personas
 
-SELECT * FROM ventas
+SELECT * FROM ventas;
 CALL spu_listar_venta;
 
 SELECT * FROM turnos;

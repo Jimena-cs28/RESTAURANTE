@@ -18,7 +18,7 @@
   <div class="container">
     <div class="row">
 
-      <table class="table table-md table-striped mt-3" id="tabla-ventas">
+      <table class="table table-md table-striped mt-4" id="tabla-ventas">
         <thead>
           <tr>
               <th>#</th>
@@ -45,26 +45,26 @@
   <script>
     document.addEventListener("DOMContentLoaded", ()=>{
         
-      const TablaV = document.querySelector("#tabla-ventas");
-      const CuerpoTabla = TablaV.querySelector("tbody");
+      const CuerpoTabla = document.querySelector("#tabla-ventas tbody");
 
       function ListarVentas(){
 
         const parametros = new URLSearchParams();
         parametros.append("operacion","listarVenta");
 
-        fetch("../controller/Ventas.controller.php",{
-          method: "POST",
+        fetch('../controller/Ventas.controller.php',{
+          method: 'POST',
           body: parametros
         })
         .then(respuesta => respuesta.json())
         .then(datos => {
+          console.log(datos);
           CuerpoTabla.innerHTML = ``;
           datos.forEach(element => {
             const venta = `
               <tr>
                 <td>${element.idventa}</td>  
-                <td>${element.idturno}</td>  
+                <td>${element.turno}</td>  
                 <td>${element.tipo}</td>  
                 <td>${element.comidas}</td> 
                 <td>${element.PrecioUni}</td>  

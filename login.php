@@ -20,15 +20,52 @@
       <div class="input-group-text bg-secondary">
         <img src="img/usuario.png" alt="logo2" style="height: 1rem">
       </div>
-      <input class="form-control" type="text" placeholer="Username">
+      <input class="form-control" type="text" id="email" placeholer="Username">
     </div>
     <div class="input-group mt-2">
       <div class="input-group-text bg-secondary">
         <img src="img/contraseña.png" alt="logo2" style="height: 1rem">
       </div>
-      <input class="form-control" type="password" placeholer="password">
+      <input class="form-control" type="password" id="password"  placeholer="password">
     </div>
-    <div class="btn btn-success text-white w-100 mt-5">Login</div>
+    <div class="btn btn-success text-white w-100 mt-5" id="iniciar" >Login</div>
   </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        function login(){
+          const datos = {
+            "operacion"   : "iniciarSesion",
+            "email"       : $("#email").val(),
+            "password"    : $("#password").val()
+          };
+
+          $.ajax({
+            url: './controller/usuario.php',
+            type: 'GET',
+            data: datos,
+            dataType: 'JSON',
+            success: function (result){
+              console.log(result);
+              if (result.login){
+                alert(`Bienvenido`);
+                window.location.href = `view/ventas.view.php`;
+              }else{
+                alert(result.mensaje);
+              }
+            }
+          });
+        }
+
+        $("#iniciar").click(login);
+      
+        $("#password").keypress(function (evt) {
+          if (evt.keyCode == 13){
+            login();
+          }
+        });
+      })
+    </script>
 </body>
 </html>

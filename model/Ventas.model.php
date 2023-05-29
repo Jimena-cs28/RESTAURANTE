@@ -20,9 +20,22 @@ class Ventas extends Conexion{
       die($e->getMessage());
     }
   }
+  
   public function listarTurno(){
     try{
-      $consulta = $this->acceso->prepare("SELECT * FROM turnos");
+      $consulta = $this->acceso->prepare("CALL spu_listarturno()");
+      $consulta->execute();
+
+      return $consulta->fetch(PDO::FETCH_NUM);
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
+
+  public function listarPersona(){
+    try{
+      $consulta = $this->acceso->prepare("SELECT nombres,apellidos FROM personas");
       $consulta->execute();
 
       return $consulta->fetch(PDO::FETCH_ASSOC);

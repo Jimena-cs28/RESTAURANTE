@@ -1,6 +1,6 @@
 USE restaurante;
 
-SELECT * FROM administrador	
+SELECT * FROM personas	
 
 INSERT INTO personas (nombres,apellidos, fechanac,telefono,dni) VALUES
 	('Saidi Ariela','Fajardo Anampa','2003-11-28','965412410','89361200'),
@@ -19,13 +19,19 @@ INSERT INTO tipopagos (Tipopago)VALUES
 	('Tarjeta Credito'),
 	('efectivo');
 
-INSERT INTO turnos (turno) VALUES
-	('T'),
-	('N');
+INSERT INTO turnos (turno,horallegada,horasalida) VALUES
+	('T','11:00:00','5:30:00'),
+	('N','5:30:00','10:00:00');
 	
 SELECT * FROM turnos
 SELECT * FROM tipopagos
-SELECT * FROM tipoComidas
+
+INSERT INTO mesas(Mesa,estado) VALUES
+	('1','disponible'),
+	('2','ocupado'),
+	('3','disponible');
+	
+SELECT * FROM mesas;
 
 INSERT INTO tipoComidas (tipo) VALUES
 	('plato entrada'),
@@ -33,25 +39,10 @@ INSERT INTO tipoComidas (tipo) VALUES
 	('plato principal'),
 	('bebidas');
 	
-INSERT INTO comidas (idtipoComida,comidas) VALUES
-(1,'Causa Rellena'),
-(1,'Papa la Huancaina'),
-(1,'Tamales'),
-(1,'Leche de tigre'),
-(2,'Lomito Saltado'),
-(2,'Mariscos'),
-(2,'Chilcano'),
-(3,'Arroz con pollo'),
-(3,'Ceviche de pescado'),
-(3,'Carapulcra'),
-(4,'Agua Cielo'),
-(4,'Chicha'),
-(4,'Agua de maracuya');
+SELECT * FROM TipoComidas
 
-SELECT * FROM comidas
-
-INSERT INTO ventas (idturno,idcomida,PrecioUni,NumMesa,cantidad,totalPagar)VALUES
-	(1,1,'8','2','2','16');
+INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,idcliente,comprobante,plato)VALUES
+	(1,1,3,'2','2','16');
 	
 SELECT * FROM ventas
 SELECT * FROM comprobante

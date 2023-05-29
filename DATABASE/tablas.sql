@@ -29,53 +29,57 @@ CREATE TABLE tipopagos
 	Tipopago		VARCHAR(30)
 );
 
-CREATE TABLE turnos
+CREATE TABLE turnos;
 (
 	idturno 	INT AUTO_INCREMENT PRIMARY KEY,
 	turno 		CHAR(1)		NOT NULL,
+	horallegada	TIME 			NOT NULL,
+	horasalida  TIME  		NOT NULL,
 	CONSTRAINT ck_turno CHECK (turno IN ('T','N'))
 );
 
 CREATE TABLE tipoComidas
 (
-	idtipoComida	INT AUTO_INCREMENT PRIMARY KEY,
+	idTplato	INT AUTO_INCREMENT PRIMARY KEY,
 	tipo		VARCHAR(50)	NOT NULL,
 	estado		CHAR(1)		NOT NULL DEFAULT '1'
 );
 
-CREATE TABLE comidas
+CREATE TABLE mesas
 (
-	idcomida	INT AUTO_INCREMENT PRIMARY KEY,
-	idtipoComida	INT		NOT NULL,
-	comidas		VARCHAR(50)	NOT NULL,
-	estado		BIT		NOT NULL DEFAULT 1,
-	CONSTRAINT fk_idticomida FOREIGN KEY (idtipoComida) REFERENCES tipoComidas(idtipoComida)
+	idmesa	INT AUTO_INCREMENT PRIMARY KEY,
+	Mesa			SMALLINT			NOT NULL,
+	estado		VARCHAR(20)		NOT NULL
 );
 
 CREATE TABLE ventas
 (
 	idventa		INT AUTO_INCREMENT PRIMARY KEY,
-	idturno		INT 		NOT NULL,
-	idcomida 	INT 		NOT NULL,
-	PrecioUni	DECIMAL(5,2)	NOT NULL,
-	NumMesa		SMALLINT	NOT NULL,
-	cantidad	SMALLINT 	NOT NULL,
-	totalPagar	DECIMAL(6,2)	NOT NULL,
+	idturno		INT 			NOT NULL,
+	idadmi		INT 			NOT NULL,
+	idmesa		INT 			NOT NULL,
+	idTplato	 	INT 			NOT NULL,
+	idcliente	INT 			NOT NULL,
+	plato			VARCHAR(50) NOT NULL,
+	comprobante	VARCHAR(20)	NOT NULL,
 	CONSTRAINT fk_idturno FOREIGN KEY (idturno) REFERENCES turnos (idturno),
-	CONSTRAINT fk_idcomida FOREIGN KEY (idcomida) REFERENCES comidas(idcomida)
+	CONSTRAINT fk_idcomida FOREIGN KEY (idTplato) REFERENCES tipoComidas(idTplato),
+	CONSTRAINT fk_idmesa FOREIGN KEY (idmesa) REFERENCES mesas (idmesa),
+	CONSTRAINT fk_idadmi FOREIGN KEY (idadmi) REFERENCES administrador (idadmi),
+	CONSTRAINT fk_idcliente FOREIGN KEY (idcliente) REFERENCES	personas(idpersona)
 );
 
-CREATE TABLE comprobante
+CREATE TABLE detalleVenta
 (
-	idcomprobante	INT AUTO_INCREMENT PRIMARY KEY,
-	idventa			INT 			NOT NULL,
-	idcliente		INT 			NOT NULL,
-	idtipopago		INT 			NOT NULL,
-	fechahora		DATETIME		NOT NULL DEFAULT NOW(),
-	RUC			CHAR(11)		NOT NULL,
-	CONSTRAINT fk_idventa FOREIGN KEY (idventa) REFERENCES ventas (idventa),
-	CONSTRAINT fk_idcliente FOREIGN KEY (idcliente)	REFERENCES personas (idpersona),
-	CONSTRAINT fk_idtipo FOREIGN KEY (idtipopago) REFERENCES tipopagos (idtipopago),
-	CONSTRAINT ck_RUC CHECK(RUC REGEXP '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
+	iddeventa 	INT AUTO_INCREMENT PRIMARY KEY,
+	idventa		INT 			NOT NULL,
+	cantidad 	SMALLINT 	NOT NULL,
+	precioTotal DECIMAL(6,2) NOT NULL,
+	idtipopago 	INT	NOT NULL,
+	CONSTRAINT fk_idtipopago FOREIGN KEY (idtipopago) REFERENCES tipopagos (idtipopago),
+	CONSTRAINT fk_idventa FOREIGN KEY (idventa) REFERENCES ventas(idventa)
 );
+
+
+
 
