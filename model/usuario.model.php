@@ -9,7 +9,7 @@ class Usuario extends Conexion{
     $this->acceso = parent::getConexion();
   }
 
-  public function iniciarSesion($email = ""){
+  public function iniciarSesion($email = ''){
     try{
       $consulta = $this->acceso->prepare("CALL spu_login(?)");
       $consulta->execute(array($email));

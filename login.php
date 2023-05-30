@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (!isset($_SESSION['iniciarSesion']) || !$_SESSION['iniciarSesion']['status']){
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,45 +40,45 @@
       </div>
     </form>
   </div>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    
     
   <script>
-      $(document).ready(function(){
-        function login(){
-          const datos = {
-            "operacion"   : "iniciarSesion",
-            "email"       : $("#usuario").val(),
-            "password"    : $("#contraseña").val()
-          };
+      document.addEventListener("DOMContentLoaded",() => {
+        const btIniciar = document.querySelector("#entrar");
+        const txtcontra = document.querySelector("#contraseña");
 
-          $.ajax({
-            url: './controller/usuario.php',
-            type: 'GET',
-            data: datos,
-            dataType: 'JSON',
-            success: function (result){
-              console.log(result);
-              if (result.login){
-                alert(`Bienvenido: ${result.email}`);
-                window.location.href = `view/ventas.view.php`;
+        function iniciarsesion(){
+          const usuario = document.querySelector("#usuario");
+          const claveacceso = document.querySelector("#contraseña");
+
+          const parametros = new URLSearchParams();
+          parametros.append("operacion", "iniciarSesion")
+          parametros.append("usuario", usuario.value)
+          parametros.append("clave", claveacceso.value)
+
+          fetch(`./controller/usuario.php`, {
+            method: 'POST',
+            body: parametros
+          })
+            .then(respuesta => respuesta.json())
+            .then(datos => {
+              if (!datos.status){
+                alert(datos.mensaje);
+                usuario.focus();
               }else{
-                alert(result.mensaje);
+                window.location.href = './view/index.html';
               }
-            }
-          });
+            })
+            .catch(error => {
+            });
         }
 
-        $("#entrar").click(login);
-      
-        $("#contraseña").keypress(function (evt) {
-          if (evt.keyCode == 13){
-            login();
-          }
+        txtcontra.addEventListener("keypress", (evt) => {
+          if (evt.charCode == 13) iniciarsesion();
         });
+
+        btIniciar.addEventListener("click", iniciarsesion);
       });
-    </script>
+  </script>
 
 </body>
 </html>

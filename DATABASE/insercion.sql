@@ -1,6 +1,6 @@
 USE restaurante;
 
-SELECT * FROM personas	
+SELECT * FROM administrador	
 
 INSERT INTO personas (nombres,apellidos, fechanac,telefono,dni) VALUES
 	('Saidi Ariela','Fajardo Anampa','2003-11-28','965412410','89361200'),
@@ -8,8 +8,8 @@ INSERT INTO personas (nombres,apellidos, fechanac,telefono,dni) VALUES
 	('Ariel','Carbajal Perez','1999-12-12','957481364','72140657'),
 	('Luis','Salazar Urbano','1988-10-04','987451203','37412905');
 
-INSERT INTO administrador (idpersona,email,claveacceso) VALUES
-	(1,'SaidiA@gmail.com','2812');
+INSERT INTO administrador (idpersona,nombreusu,email,claveacceso) VALUES
+	(1,'SaiAri12','SaidiA@gmail.com','2812');
 	
 
 
@@ -41,14 +41,14 @@ INSERT INTO tipoPlatos (tipo) VALUES
 	
 SELECT * FROM tipoPlatos
 
-INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,idcliente,PrecioUni,plato,comprobante)VALUES
-	(1,1,3,1,2,'15','Carapulcra','Boleta');
+INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,idcliente,plato,comprobante)VALUES
+	(1,1,3,1,2,'Carapulcra','Boleta');
 	
 SELECT * FROM ventas
 SELECT * FROM detalleVenta
 
-INSERT INTO detalleVenta (idventa,cantidad,precioTotal,idtipopago) VALUES
-	(1,'2','30',4);
+INSERT INTO detalleVenta (idventa,PrecioUni,cantidad,precioTotal,idtipopago) VALUES
+	(1,'15','2','30',4);
 	
 	
 	

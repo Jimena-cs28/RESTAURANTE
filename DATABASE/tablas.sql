@@ -17,8 +17,9 @@ CREATE TABLE personas
 CREATE TABLE administrador
 (
 	idadmi		INT AUTO_INCREMENT PRIMARY KEY,
-	idpersona	INT 		NOT NULL,
-	email		VARCHAR(30) 	NOT NULL,
+	idpersona	INT 				NOT NULL,
+	nombreusu	VARCHAR(30)		NOT NULL,
+	email			VARCHAR(30) 	NOT NULL,
 	claveacceso	VARCHAR(100)	NOT NULL,
 	CONSTRAINT fk_idpersona FOREIGN KEY (idpersona) REFERENCES personas (idpersona)
 );

@@ -6,7 +6,7 @@ CREATE PROCEDURE spu_login
    IN _email VARCHAR(70)
 )
 BEGIN
-	SELECT email, claveacceso
+	SELECT email, claveacceso,nombreusu
 	FROM administrador
 	WHERE email = _email;
 END$$
@@ -21,7 +21,7 @@ END $$
 
 CALL spu_listarturno()
 
-SELECT * FROM detalleVenta
+SELECT * FROM mesas	
 
 DELIMITER $$
 CREATE PROCEDURE spu_listar_deventa()
@@ -32,7 +32,7 @@ BEGIN
 	tipoPlatos.tipo,
 	personas.nombres,
 	personas.apellidos,
-	ventas.PrecioUni, 
+	PrecioUni, 
 	ventas.plato,
 	cantidad, precioTotal,
 	tipopagos.Tipopago
@@ -50,17 +50,20 @@ CALL spu_listar_deventa();
 DELIMITER $$
 CREATE PROCEDURE  spu_registrar_venta
 (
-	IN _idturno	INT,
-	IN _idcomida    INT,
-	IN _PrecioUni 	 DECIMAL(5,2),
-	IN _numMesa 	 SMALLINT,
-	IN _cantidad		SMALLINT,
-	IN _totalPagar DECIMAL(5,2)
+	IN _idturno		INT,
+	IN _idadmi    	INT,
+	IN _idmesa 	 	INT,
+	IN _idTplato 	INT,
+	IN _idcliente	INT,
+	IN _plato 		VARCHAR(30),
+	IN _comprobante VARCHAR(50)
 )
 BEGIN
-	INSERT INTO ventas (idturno, idcomida, PrecioUni, NumMesa, cantidad, totalPagar) VALUES
-	(_idturno,_idcomida,_PrecioUni,_numMesa,_cantidad, _totalPagar);
+	INSERT INTO ventas (idturno, idadmi, idmesa, idTplato, idcliente, plato, comprobante) VALUES
+							(_idturno,_idadmi,_idmesa,_idTplato,_idcliente, _plato,_comprobante);
 END$$ 
+
+CALL spu_registrar_venta(1,1,3,4,3,'Arroz Chaufa','boleta');
 
 SELECT nombres,apellidos
 FROM personas
@@ -68,4 +71,52 @@ FROM personas
 SELECT * FROM ventas;
 CALL spu_listar_venta;
 
-SELECT * FROM turnos;
+DELIMITER $$
+CREATE PROCEDURE spu_listar_turno()
+BEGIN
+	SELECT idturno,turno
+	FROM turnos;
+END$$
+
+DELIMITER $$
+CREATE PROCEDURE spu_listar_mesa()
+BEGIN
+	SELECT Mesa
+	FROM mesas;
+END$$
+
+CALL spu_listar_mesa();
+
+DELIMITER $$
+CREATE PROCEDURE spu_listar_cliente()
+BEGIN
+	SELECT idpersona, nombres, apellidos
+	FROM personas;
+END$$
+
+SELECT * FROM personas;
+SELECT * FROM administrador;
+SELECT * FROM mesas;
+
+DELIMITER $$
+CREATE PROCEDURE spu_listar_Tpago()
+BEGIN
+	SELECT idtipopago,Tipopago
+	FROM tipopagos;
+END$$
+
+DELIMITER $$
+CREATE PROCEDURE spu_listar_admi()
+BEGIN
+	SELECT idadmi, nombreusu
+	FROM administrador;
+END$$
+
+DELIMITER $$
+CREATE PROCEDURE spu_listar_tplato()
+BEGIN
+	SELECT idTplato, tipo
+	FROM tipoPlatos;
+END$$
+
+

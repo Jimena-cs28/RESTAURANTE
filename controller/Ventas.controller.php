@@ -6,25 +6,9 @@ if(isset($_POST['operacion'])){
   $ventas = new Ventas();
 
   if ($_POST['operacion'] == 'listarVenta'){
-    $data = $ventas->ListarVenta();
-    if ($data){
-      foreach($data as $registro){
-        echo "
-            <tr>
-                <td>{$registro['iddeventa']}</td>
-                <td>{$registro['turno']}</td>
-                <td>{$registro['Mesa']}</td>
-                <td>{$registro['tipo']}</td>
-                <td>{$registro['nombres']}</td>
-                <td>{$registro['apellidos']}</td>
-                <td>{$registro['PrecioUni']}</td>
-                <td>{$registro['plato']}</td>
-                <td>{$registro['cantidad']}</td>
-                <td>{$registro['precioTotal']}</td>
-                <td>{$registro['Tipopago']}</td>
-            </tr>
-        ";
-      }
+    $datos = $ventas->ListarVenta();
+    if ($datos){
+      echo json_encode($datos);
     }
   }
 
@@ -35,11 +19,52 @@ if(isset($_POST['operacion'])){
     }
   }
 
-  if($_POST['operacion'] == 'listarPersona'){
-    $datos = $ventas->listarPersona();
+  if($_POST['operacion'] == 'listarMesa'){
+    $datos = $ventas->listarMesa();
     if($datos){
       echo json_encode($datos);
     }
   }
-  
+
+  if($_POST['operacion'] == 'listarCliente'){
+    $datos = $ventas->listarCliente();
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+
+  if($_POST['operacion'] == 'listarPago'){
+    $datos = $ventas->listarPago();
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+
+  if($_POST['operacion'] == 'listarAdmi'){
+    $datos = $ventas->listarAdmi();
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+
+  if($_POST['operacion'] == 'listarPlato'){
+    $datos = $ventas->listarPlato();
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+  if($_POST['operacion'] == 'registrarV'){
+    $datosGuardar = [
+      "idturno"     => $_POST['idturno'],
+      "idadmi"      => $_POST['idadmi'],
+      "idmesa"      => $_POST['idmesa'],
+      "idTplato"    => $_POST['idTplato'],
+      "idcliente"   => $_POST['idcliente'],
+      "plato"       => $_POST['plato'],
+      "comprobante" => $_POST['comprobante']
+    ];
+
+    $respuesta = $ventas->registrarV($datosGuardar);
+    echo json_encode($respuesta);
+  }
 }
