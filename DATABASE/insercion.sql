@@ -20,8 +20,8 @@ INSERT INTO tipopagos (Tipopago)VALUES
 	('efectivo');
 
 INSERT INTO turnos (turno,horallegada,horasalida) VALUES
-	('T','11:00:00','5:30:00'),
-	('N','5:30:00','10:00:00');
+	('T','11:00:00','17:30:00'),
+	('N','17:30:00','22:00:00');
 	
 SELECT * FROM turnos
 SELECT * FROM tipopagos
@@ -33,22 +33,22 @@ INSERT INTO mesas(Mesa,estado) VALUES
 	
 SELECT * FROM mesas;
 
-INSERT INTO tipoComidas (tipo) VALUES
+INSERT INTO tipoPlatos (tipo) VALUES
 	('plato entrada'),
 	('plato salida'),
 	('plato principal'),
 	('bebidas');
 	
-SELECT * FROM TipoComidas
+SELECT * FROM tipoPlatos
 
-INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,idcliente,comprobante,plato)VALUES
-	(1,1,3,'2','2','16');
+INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,idcliente,PrecioUni,plato,comprobante)VALUES
+	(1,1,3,1,2,'15','Carapulcra','Boleta');
 	
 SELECT * FROM ventas
-SELECT * FROM comprobante
+SELECT * FROM detalleVenta
 
-INSERT INTO comprobante (idventa,idcliente,idtipopago,RUC) VALUES
-	(1,2,1,'54120795641');
+INSERT INTO detalleVenta (idventa,cantidad,precioTotal,idtipopago) VALUES
+	(1,'2','30',4);
 	
 	
 	

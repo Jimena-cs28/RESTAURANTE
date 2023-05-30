@@ -6,7 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ventas</title>
   <link rel="stylesheet" href="../css/index.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Estilos Bootstrap 5.2 -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- DataTable -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
 </head>
 <body>
@@ -24,11 +29,12 @@
               <th>#</th>
               <th>Turno</th>
               <th>Tipo de Plato</th>
-              <th>Comida</th>
+              <th>Nombres</th>
               <th>Precio</th>
-              <th>Mesa</th>
+              <th>Plato</th>
               <th>Cantidad</th>
               <th>Total</th>
+              <th>Tipopago</th>
           </tr>
         </thead>
         <tbody>
@@ -38,47 +44,59 @@
     </div>
   </div>
   
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>    
+  <!-- AJAX = JavaScript asincrónico-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
   
+  <!--Js Bootstrap 5.2-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    
+  <!-- Fontawesome -->
+  <script src="https://kit.fontawesome.com/2927838564.js" crossorigin="anonymous"></script>
+
+  <!-- DataTable -->
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+  
+  <!-- Opcional -->
+  <script src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
+
   <script>
-    document.addEventListener("DOMContentLoaded", ()=>{
-        
-      const CuerpoTabla = document.querySelector("#tabla-ventas tbody");
+    $(document).ready(function(){
 
-      function ListarVentas(){
+      function listaVentas(){
+        $.ajax({
+          url: '../controller/Ventas.controller.php',
+          type: 'GET',
+          data: {'operacion': 'listarVenta'},
+          success: function (result){
+            var tabla = $("#tabla-ventas").DataTable();
+            //Destruirlo
+            tabla.destroy();
 
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarVenta");
+            //Poblar el cuerpo de la tabla
+            $("#tabla-ventas tbody").html(result);
 
-        fetch('../controller/Ventas.controller.php',{
-          method: 'POST',
-          body: parametros
-        })
-        .then(respuesta => respuesta.json())
-        .then(datos => {
-          console.log(datos);
-          CuerpoTabla.innerHTML = ``;
-          datos.forEach(element => {
-            const venta = `
-              <tr>
-                <td>${element.idventa}</td>  
-                <td>${element.turno}</td>  
-                <td>${element.tipo}</td>  
-                <td>${element.comidas}</td> 
-                <td>${element.PrecioUni}</td>  
-                <td>${element.NumMesa}</td>  
-                <td>${element.cantidad}</td>  
-                <td>${element.totalPagar}</td>  
-              <tr>
-            `;
-            CuerpoTabla.innerHTML += venta;
-          });
+            //Reconstruimos la tabla
+            $("#tabla-ventas").DataTable({
+                // dom: 'Bfrtip',
+                // buttons: [
+                //     {  
+                //         extend: 'print',
+                //         exportOptions: { columns: [0,1,2,3,4] }
+                //     }
+                // ]
+                // language: {
+                //     url: 'js/Spanish.json'
+                // }
+            });
+
+          }
         });
       }
 
-      ListarVentas();
+      listaVentas();
     });
   </script>
 </body>

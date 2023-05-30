@@ -15,6 +15,7 @@
     <h2 id="nav">Bienvenido Realice su venta aqui</h2>
     <a class="btn btn-outline-dark" href="#">Reportes</a>
     <a class="btn btn-outline-dark" href="./ventas.view.php">Listas de venta</a>
+    <a class="btn btn-outline-dark" href="#">Mesas Disponibles</a>
     <a class="btn btn-outline-dark" href="#">Cerrar Sesion</a>
   </nav>
 
@@ -22,7 +23,7 @@
     <div class="mb-5 mt-5">
       <form action="" autocomplete="off" id="formulario-Venta">
         <div class="card">
-          <div class="card-header bg-info text-light">
+          <div class="card-header bg-success text-light">
               Registro de Venta
           </div>
           <div class="card-body">
@@ -77,8 +78,50 @@
           </div>
         </div>
       </form> 
+      <button type="button" id="abrir-modal-venta" class="btn btn-outline-secondary mt-5" data-bs-toggle="modal" data-bs-target="#modal-registro-venta">Detalle Venta</button>
     </div>
   </div>
+
+  <!-- Primer modal: registro de productos-->
+  <div class="modal fade" id="modal-registro-venta" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div id="modal-registro-header" class="modal-header bg-info text-light">
+                <h5 class="modal-title" id="modal-registro-titulo">Registro DetalleVenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" autocomplete="off" id="formulario-empleado">
+                <div class="row">
+                    <div class="col-md-6 mt-3">
+                        <label for="cantidad" class="form-label bold">cantidad:</label>
+                        <input type="text" class="form-control form-control-sm" id="cantidad">
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <label for="Marca" class="form-label">Marca</label>
+                        <input type="text" class="form-control form-control-sm" id="Marca">
+                    </div>
+                </div>
+                    
+                <div class="row">
+                  <div class="col-md-6 mt-3">
+                    <label for="apellidos" class="form-label bold">Precio:</label>
+                    <input type="text" class="form-control form-control-sm" id="apellidos">
+                  </div>
+                  <div class="col-md-6 mt-3">
+                    <label for="nombres" class="form-label bold">Garantia:</label>
+                    <input type="text" class="form-control form-control-sm" id="nombres">
+                  </div>
+                </div>
+                </form> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-sm btn-primary" id="guardar">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () =>{

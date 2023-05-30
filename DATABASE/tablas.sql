@@ -1,4 +1,4 @@
-CREATE DATABASE restaurante;
+CREATE DATABASE restaurante
 USE restaurante;
 
 CREATE TABLE personas
@@ -29,16 +29,16 @@ CREATE TABLE tipopagos
 	Tipopago		VARCHAR(30)
 );
 
-CREATE TABLE turnos;
+CREATE TABLE turnos
 (
 	idturno 	INT AUTO_INCREMENT PRIMARY KEY,
 	turno 		CHAR(1)		NOT NULL,
-	horallegada	TIME 			NOT NULL,
-	horasalida  TIME  		NOT NULL,
+	horallegada	TIME 		NOT NULL,
+	horasalida  	TIME  		NOT NULL,
 	CONSTRAINT ck_turno CHECK (turno IN ('T','N'))
 );
 
-CREATE TABLE tipoComidas
+CREATE TABLE tipoPlatos
 (
 	idTplato	INT AUTO_INCREMENT PRIMARY KEY,
 	tipo		VARCHAR(50)	NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE tipoComidas
 CREATE TABLE mesas
 (
 	idmesa	INT AUTO_INCREMENT PRIMARY KEY,
-	Mesa			SMALLINT			NOT NULL,
+	Mesa		SMALLINT		NOT NULL,
 	estado		VARCHAR(20)		NOT NULL
 );
 
@@ -58,24 +58,25 @@ CREATE TABLE ventas
 	idturno		INT 			NOT NULL,
 	idadmi		INT 			NOT NULL,
 	idmesa		INT 			NOT NULL,
-	idTplato	 	INT 			NOT NULL,
+	idTplato	INT 			NOT NULL,
 	idcliente	INT 			NOT NULL,
-	plato			VARCHAR(50) NOT NULL,
-	comprobante	VARCHAR(20)	NOT NULL,
+	PrecioUni	DECIMAL(5,2)		NOT NULL,
+	plato		VARCHAR(50) 		NOT NULL,
+	comprobante	VARCHAR(20)		NOT NULL,
 	CONSTRAINT fk_idturno FOREIGN KEY (idturno) REFERENCES turnos (idturno),
-	CONSTRAINT fk_idcomida FOREIGN KEY (idTplato) REFERENCES tipoComidas(idTplato),
+	CONSTRAINT fk_idcomida FOREIGN KEY (idTplato) REFERENCES tipoPlatos(idTplato),
 	CONSTRAINT fk_idmesa FOREIGN KEY (idmesa) REFERENCES mesas (idmesa),
 	CONSTRAINT fk_idadmi FOREIGN KEY (idadmi) REFERENCES administrador (idadmi),
-	CONSTRAINT fk_idcliente FOREIGN KEY (idcliente) REFERENCES	personas(idpersona)
+	CONSTRAINT fk_idcliente FOREIGN KEY (idcliente) REFERENCES personas(idpersona)
 );
 
 CREATE TABLE detalleVenta
 (
 	iddeventa 	INT AUTO_INCREMENT PRIMARY KEY,
 	idventa		INT 			NOT NULL,
-	cantidad 	SMALLINT 	NOT NULL,
-	precioTotal DECIMAL(6,2) NOT NULL,
-	idtipopago 	INT	NOT NULL,
+	cantidad 	SMALLINT 		NOT NULL,
+	precioTotal 	DECIMAL(6,2) 		NOT NULL,
+	idtipopago 	INT			NOT NULL,
 	CONSTRAINT fk_idtipopago FOREIGN KEY (idtipopago) REFERENCES tipopagos (idtipopago),
 	CONSTRAINT fk_idventa FOREIGN KEY (idventa) REFERENCES ventas(idventa)
 );

@@ -6,13 +6,8 @@ CREATE PROCEDURE spu_login
    IN _email VARCHAR(70)
 )
 BEGIN
-	SELECT idadmi,
-	personas.nombres,
-	personas.apellidos,
-	email,
-	claveacceso
+	SELECT email, claveacceso
 	FROM administrador
-	INNER JOIN personas ON personas.idpersona = administrador.idpersona
 	WHERE email = _email;
 END$$
 
@@ -26,27 +21,36 @@ END $$
 
 CALL spu_listarturno()
 
+SELECT * FROM detalleVenta
+
 DELIMITER $$
-CREATE PROCEDURE spu_listar_venta()
+CREATE PROCEDURE spu_listar_deventa()
 BEGIN
-	SELECT ventas.`idventa`,  
-			turnos.`turno`,
-			tipoComidas.`tipo`,
-			comidas.`comidas`,
-			PrecioUni,
-			NumMesa,
-			cantidad, 
-			totalPagar
-	FROM ventas
+	SELECT detalleVenta.iddeventa,
+	turnos.turno,
+	mesas.Mesa,
+	tipoPlatos.tipo,
+	personas.nombres,
+	personas.apellidos,
+	ventas.PrecioUni, 
+	ventas.plato,
+	cantidad, precioTotal,
+	tipopagos.Tipopago
+	FROM detalleVenta
+	INNER JOIN ventas ON ventas.idventa = detalleVenta.idventa
+	INNER JOIN tipopagos ON tipopagos.idtipopago = detalleVenta.idtipopago
 	INNER JOIN turnos ON turnos.idturno = ventas.`idturno`
-	INNER JOIN comidas ON comidas.idcomida = ventas.`idcomida`
-	INNER JOIN tipoComidas ON tipoComidas.`idtipoComida` = comidas.`idtipoComida`;
+	INNER JOIN mesas ON mesas.idmesa = ventas.idmesa
+	INNER JOIN personas ON personas.idpersona = ventas.idcliente
+	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato;
 END $$
+
+CALL spu_listar_deventa();
 
 DELIMITER $$
 CREATE PROCEDURE  spu_registrar_venta
 (
-	IN _idturno		 INT,
+	IN _idturno	INT,
 	IN _idcomida    INT,
 	IN _PrecioUni 	 DECIMAL(5,2),
 	IN _numMesa 	 SMALLINT,

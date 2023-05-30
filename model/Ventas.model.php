@@ -11,10 +11,11 @@ class Ventas extends Conexion{
 
   public function ListarVenta(){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_venta()");
+      $consulta = $this->acceso->prepare("CALL spu_listar_deventa()");
       $consulta->execute();
 
-      return $consulta->fetch(PDO::FETCH_ASSOC);
+      $datosObtenidos = $consulta->fetch(PDO::FETCH_ASSOC);
+      return $datosObtenidos;
     }
     catch(Exception $e){
       die($e->getMessage());

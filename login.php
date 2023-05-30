@@ -8,37 +8,43 @@
   <link rel="stylesheet" href="./css/login.css">
   <!-- boststrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+  
 </head>
-<body class="bg-secondary d-flex justify-content-center align-items-center vh-100">
-  <div class="bg-white p-5 rounded-5 text-secondary" style="width:25rem">
-    <div class="d-flex justify-content-center">
-      <img src="img/logo.PNG" alt="logo-principal" style="height: 7rem">
+<body>
+  <div class="contenedor-formulario contenedor">
+    <div class="imagen-formulario">
+            
     </div>
-    <div class="text-center fs-1 fw-bold">Inicie Sesion</div>
-    <div class="input-group mt-3 ">
-      <div class="input-group-text bg-secondary">
-        <img src="img/usuario.png" alt="logo2" style="height: 1rem">
+
+    <form class="formulario">
+      <div class="texto-formulario">
+        <h2>Bienvenido de nuevo</h2>
+        <p>Inicia sesión con tu cuenta</p>
       </div>
-      <input class="form-control" type="text" id="email" placeholer="Username">
-    </div>
-    <div class="input-group mt-2">
-      <div class="input-group-text bg-secondary">
-        <img src="img/contraseña.png" alt="logo2" style="height: 1rem">
+      <div class="input">
+        <label for="usuario">Usuario</label>
+        <input placeholder="Ingresa tu nombre" type="text" id="usuario">
       </div>
-      <input class="form-control" type="password" id="password"  placeholer="password">
-    </div>
-    <div class="btn btn-success text-white w-100 mt-5" id="iniciar" >Login</div>
+      <div class="input">
+        <label for="contraseña">Contraseña</label>
+        <input placeholder="Ingresa tu contraseña" type="password" id="contraseña">
+      </div>
+      <div class="input">
+        <input type="submit" value="Entrar" id="entrar">
+      </div>
+    </form>
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script>
+    
+    
+  <script>
       $(document).ready(function(){
         function login(){
           const datos = {
             "operacion"   : "iniciarSesion",
-            "email"       : $("#email").val(),
-            "password"    : $("#password").val()
+            "email"       : $("#usuario").val(),
+            "password"    : $("#contraseña").val()
           };
 
           $.ajax({
@@ -49,7 +55,7 @@
             success: function (result){
               console.log(result);
               if (result.login){
-                alert(`Bienvenido`);
+                alert(`Bienvenido: ${result.email}`);
                 window.location.href = `view/ventas.view.php`;
               }else{
                 alert(result.mensaje);
@@ -58,14 +64,15 @@
           });
         }
 
-        $("#iniciar").click(login);
+        $("#entrar").click(login);
       
-        $("#password").keypress(function (evt) {
+        $("#contraseña").keypress(function (evt) {
           if (evt.keyCode == 13){
             login();
           }
         });
-      })
+      });
     </script>
+
 </body>
 </html>
