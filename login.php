@@ -65,7 +65,7 @@ if (!isset($_SESSION['iniciarSesion']) || !$_SESSION['iniciarSesion']['status'])
                 alert(datos.mensaje);
                 usuario.focus();
               }else{
-                window.location.href = './view/index.html';
+                window.location.href = './view/';
               }
             })
             .catch(error => {

@@ -24,7 +24,7 @@ class Ventas extends Conexion{
   
   public function listarTurno(){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_turno()");
+      $consulta = $this->acceso->prepare("SELECT * FROM turnos");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -36,7 +36,7 @@ class Ventas extends Conexion{
 
   public function listarMesa(){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_mesa()");
+      $consulta = $this->acceso->prepare("SELECT * FROM mesas");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -47,7 +47,7 @@ class Ventas extends Conexion{
   }
   public function listarCliente(){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_cliente()");
+      $consulta = $this->acceso->prepare("SELECT * FROM personas");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -59,7 +59,7 @@ class Ventas extends Conexion{
 
   public function listarPago(){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_Tpago()");
+      $consulta = $this->acceso->prepare("SELECT * FROM tipopagos");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -71,7 +71,7 @@ class Ventas extends Conexion{
 
   public function listarAdmi(){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_admi()");
+      $consulta = $this->acceso->prepare("SELECT * FROM administrador");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -83,7 +83,19 @@ class Ventas extends Conexion{
 
   public function listarPlato(){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_tplato()");
+      $consulta = $this->acceso->prepare("SELECT * FROM tipoPlatos");
+      $consulta->execute();
+
+      return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
+
+  public function listarCompro(){
+    try{
+      $consulta = $this->acceso->prepare("SELECT * FROM comprobante");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -100,16 +112,14 @@ class Ventas extends Conexion{
       "message" =>""
     ];
     try{
-      $consulta = $this->acceso->prepare("spu_registrar_venta(?,?,?,?,?,?,?)");
+      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?)");
       $respuesta["status"] = $consulta->execute(
         array(
           $datos["idturno"],
           $datos["idadmi"],
           $datos["idmesa"],
           $datos["idTplato"],
-          $datos["idcliente"],
           $datos["plato"],
-          $datos["comprobante"]
         )
       );
     }

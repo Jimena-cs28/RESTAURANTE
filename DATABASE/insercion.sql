@@ -8,8 +8,8 @@ INSERT INTO personas (nombres,apellidos, fechanac,telefono,dni) VALUES
 	('Ariel','Carbajal Perez','1999-12-12','957481364','72140657'),
 	('Luis','Salazar Urbano','1988-10-04','987451203','37412905');
 
-INSERT INTO administrador (idpersona,nombreusu,email,claveacceso) VALUES
-	(1,'SaiAri12','SaidiA@gmail.com','2812');
+INSERT INTO administrador (nombreusu,email,claveacceso) VALUES
+	('Ariel12','AriP@gmail.com','2812');
 	
 
 
@@ -23,12 +23,17 @@ INSERT INTO turnos (turno,horallegada,horasalida) VALUES
 	('T','11:00:00','17:30:00'),
 	('N','17:30:00','22:00:00');
 	
+	
 SELECT * FROM turnos
 SELECT * FROM tipopagos
 
 INSERT INTO mesas(Mesa,estado) VALUES
+	('4','disponible'),
+	('5','disponible'),
+	('6','disponible'),
+	('7','disponible');
 	('1','disponible'),
-	('2','ocupado'),
+	('2','disponible'),
 	('3','disponible');
 	
 SELECT * FROM mesas;
@@ -39,16 +44,20 @@ INSERT INTO tipoPlatos (tipo) VALUES
 	('plato principal'),
 	('bebidas');
 	
+INSERT INTO comprobante(comprobante) VALUES
+('Boleta'),
+('Factura');
+
 SELECT * FROM tipoPlatos
 
-INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,idcliente,plato,comprobante)VALUES
-	(1,1,3,1,2,'Carapulcra','Boleta');
+INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,plato)VALUES
+	(1,1,3,1,'Carapulcra');
 	
 SELECT * FROM ventas
 SELECT * FROM detalleVenta
 
-INSERT INTO detalleVenta (idventa,PrecioUni,cantidad,precioTotal,idtipopago) VALUES
-	(1,'15','2','30',4);
+INSERT INTO detalleVenta (idventa,idcliente,PrecioUni,cantidad,precioTotal,idtipopago,idcomprobante) VALUES
+	(1,1,'15','2','30',1,1);
 	
 	
 	

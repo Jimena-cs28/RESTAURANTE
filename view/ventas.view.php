@@ -37,6 +37,7 @@
               <th>cantidad</th>
               <th>precioTotal</th>
               <th>Tipo de Pago</th>
+              <th>Comprobante</th>
           </tr>
         </thead>
         <tbody>
@@ -78,6 +79,7 @@
                 <td>${element.cantidad}</td>
                 <td>${element.precioTotal}</td>
                 <td>${element.Tipopago}</td>
+                <td>${element.comprobante}</td>
               </tr>
             `;
             cuerpo.innerHTML +=opcion;

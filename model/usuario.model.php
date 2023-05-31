@@ -11,7 +11,7 @@ class Usuario extends Conexion{
 
   public function iniciarSesion($email = ''){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_login(?)");
+      $consulta = $this->acceso->prepare("SELECT * FROM administrador WHERE email = ?");
       $consulta->execute(array($email));
 
       return $consulta->fetch(PDO::FETCH_ASSOC);

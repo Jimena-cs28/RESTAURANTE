@@ -12,7 +12,7 @@ if (isset($_POST['operacion'])){
 
   if ($_POST['operacion'] == 'iniciarSesion'){
 
-    $data = $usuario->iniciarSesion($_POST['usuario']);
+    $data = $usuario->iniciarSesion($_POST['administrador']);
 
     $acceso = [
       "status"     => false,
@@ -26,7 +26,7 @@ if (isset($_POST['operacion'])){
       if (password_verify($_POST['clave'],$claveIngresada)){      
         //Registrar datos de acceso
         $acceso["status"] = true;
-        $acceso["email"] = $data["nombreusu"];
+        $acceso["email"] = $data["email"];
       }else{
         $acceso["mensaje"] = "Error en la contraseña";
       }

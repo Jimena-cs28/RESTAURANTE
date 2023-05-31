@@ -52,6 +52,21 @@
                   </div>
                 </div>
                 <div class="row">
+                  <div class="col-md-6 mt-4" >
+                    <label for="plato" class="form-label">Cliente</label>  
+                        <select name="" id="cliente" class="form-select">
+
+                        </select>
+                  </div>
+                  <div class="col-md-6 mt-4" >
+                    <label for="precio" class="form-label ">Comprobante</label>
+                    <select name="" id="comprobante" class="form-select">
+
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
                     <div class="md-3 mt-4">
                       <button class="btn btn-outline-info" id="registrar">Registrar</button>
                       <button class="btn btn-outline-success">Calcular</button>
@@ -117,7 +132,7 @@
         
                   <div class="row">
                     <div class="col-md-6 mt-4" >
-                      <label for="tipo" class="form-label">Tipo de Plato</label>
+                      <label for="tipoP" class="form-label">Tipo de Plato</label>
                       <select name="" id="tipoP" class="form-select">
 
                       </select>
@@ -129,20 +144,6 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-md-6 mt-3">
-                      <div class="md-3">
-                        <label for="plato" class="form-label">Cliente</label>  
-                        <select name="" id="cliente" class="form-select">
-
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mt-3">
-                      <div class="md-3">
-                        <label for="plato" class="form-label">Comprobante</label>  
-                        <input type="text" id="comprobante" class="form-control">
-                      </div>
-                    </div>
                     <div class="md-3 mt-4">
                       <button class="btn btn-outline-info" id="registrar1">Registrar</button>
                     </div>
@@ -167,6 +168,7 @@
       const lienzo2 = document.querySelector("#grafico2");
       const btregistrar = document.querySelector("#registrar1");
 
+      const selectcompro = document.querySelector("#comprobante");
       const selecturno = document.querySelector("#turno");
       const selectadmi = document.querySelector("#admi");
       const selectmesa = document.querySelector("#mesa");
@@ -212,13 +214,11 @@
           const parametros = new URLSearchParams();
           parametros.append("operacion", "registrarV");
 
-          parametros.append("idturno", turno.value);
-          parametros.append("idadmi", admi.value);
-          parametros.append("idmesa", mesa.value);
-          parametros.append("idTplato", tipo.value);
-          parametros.append("idcliente", cliente.value);
-          parametros.append("plato", plato.value);
-          parametros.append("comprobante", comprobante.value);
+          parametros.append("idturno", document.querySelector("#turno").value);
+          parametros.append("idadmi", document.querySelector("#admi").value);
+          parametros.append("idmesa", document.querySelector("#mesa").value);
+          parametros.append("idTplato", document.querySelector("#tipoP").value);
+          parametros.append("plato", document.querySelector("#plato").value);
 
           fetch("../controller/Ventas.controller.php" ,{
             method: 'POST',
@@ -227,16 +227,15 @@
           .then(response => response.json())
           .then(datos => {
             if(datos.status){
-              document.querySelector("#formulario-Venta").focus();
-
+              document.querySelector("#formulario-Venta").reset();
+              document.querySelector("#turno").focus();
             }else{
               alert(datos.message);
             }
           })
         }
       }
-      btMostrar.click("#modal-registro-venta");
-      btregistrar.addEventListener("click", registrarV);
+      
 
       function listarTurno (){
         const parametros = new URLSearchParams();
@@ -359,12 +358,35 @@
         });
       }
 
+      function listarCompro (){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","listarCompro");
+
+        fetch("../controller/Ventas.controller.php", {
+          method: 'POST',
+          body: parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          selectcompro.innerHTML = "<option value=''>Seleccione</option>";
+          datos.forEach(element => {
+            let compro = `
+              <option value='${element.idcomprobante}'>${element.comprobante}</option> 
+            `;
+            selectcompro.innerHTML += compro;
+          });
+        });
+      }
+
+      btregistrar.addEventListener("click", registrarV);
+      listarCompro();
       listarPlato();
       listarAdmi();
       listarMesa();
       listarTurno();
       listarCliente();
       listarPago();
+      btMostrar.addEventListener("click","#modal-registro-venta");
     });
   </script>
 </body>

@@ -17,11 +17,9 @@ CREATE TABLE personas
 CREATE TABLE administrador
 (
 	idadmi		INT AUTO_INCREMENT PRIMARY KEY,
-	idpersona	INT 				NOT NULL,
-	nombreusu	VARCHAR(30)		NOT NULL,
 	email			VARCHAR(30) 	NOT NULL,
-	claveacceso	VARCHAR(100)	NOT NULL,
-	CONSTRAINT fk_idpersona FOREIGN KEY (idpersona) REFERENCES personas (idpersona)
+	nombreusu	VARCHAR(30)		NOT NULL,
+	claveacceso	VARCHAR(100)	NOT NULL
 );
 
 CREATE TABLE tipopagos
@@ -43,7 +41,7 @@ CREATE TABLE tipoPlatos
 (
 	idTplato	INT AUTO_INCREMENT PRIMARY KEY,
 	tipo		VARCHAR(50)	NOT NULL,
-	estado		CHAR(1)		NOT NULL DEFAULT '1'
+	estado	CHAR(1)		NOT NULL DEFAULT '1'
 );
 
 CREATE TABLE mesas
@@ -59,29 +57,35 @@ CREATE TABLE ventas
 	idturno		INT 			NOT NULL,
 	idadmi		INT 			NOT NULL,
 	idmesa		INT 			NOT NULL,
-	idTplato	INT 			NOT NULL,
-	idcliente	INT 			NOT NULL,
-	PrecioUni	DECIMAL(5,2)		NOT NULL,
+	idTplato	INT 				NOT NULL,
 	plato		VARCHAR(50) 		NOT NULL,
-	comprobante	VARCHAR(20)		NOT NULL,
 	CONSTRAINT fk_idturno FOREIGN KEY (idturno) REFERENCES turnos (idturno),
 	CONSTRAINT fk_idcomida FOREIGN KEY (idTplato) REFERENCES tipoPlatos(idTplato),
 	CONSTRAINT fk_idmesa FOREIGN KEY (idmesa) REFERENCES mesas (idmesa),
-	CONSTRAINT fk_idadmi FOREIGN KEY (idadmi) REFERENCES administrador (idadmi),
-	CONSTRAINT fk_idcliente FOREIGN KEY (idcliente) REFERENCES personas(idpersona)
+	CONSTRAINT fk_idadmi FOREIGN KEY (idadmi) REFERENCES administrador (idadmi)
 );
 
 CREATE TABLE detalleVenta
 (
 	iddeventa 	INT AUTO_INCREMENT PRIMARY KEY,
-	idventa		INT 			NOT NULL,
+	idventa		INT 				NOT NULL,
+	idcliente	INT 				NOT NULL,
+	precioUni	DECIMAL(5,2)	NOT NULL,
 	cantidad 	SMALLINT 		NOT NULL,
-	precioTotal 	DECIMAL(6,2) 		NOT NULL,
-	idtipopago 	INT			NOT NULL,
+	precioTotal DECIMAL(6,2)NOT NULL,
+	idtipopago 	INT				NOT NULL,
+	idcomprobante	INT			NOT NULL,
 	CONSTRAINT fk_idtipopago FOREIGN KEY (idtipopago) REFERENCES tipopagos (idtipopago),
-	CONSTRAINT fk_idventa FOREIGN KEY (idventa) REFERENCES ventas(idventa)
+	CONSTRAINT fk_idventa FOREIGN KEY (idventa) REFERENCES ventas(idventa),
+	CONSTRAINT fk_idcliente FOREIGN KEY (idcliente) REFERENCES personas(idpersona),
+	CONSTRAINT fk_idcompro FOREIGN KEY (idcomprobante) REFERENCES comprobante(idcomprobante)
 );
 
+CREATE TABLE comprobante
+(
+	idcomprobante INT AUTO_INCREMENT PRIMARY KEY,
+	comprobante		VARCHAR(20)	NOT NULL
+);
 
 
 

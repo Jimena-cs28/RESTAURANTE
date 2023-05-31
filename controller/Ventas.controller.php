@@ -53,15 +53,21 @@ if(isset($_POST['operacion'])){
       echo json_encode($datos);
     }
   }
+
+  if($_POST['operacion'] == 'listarCompro'){
+    $datos = $ventas->listarCompro();
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+  
   if($_POST['operacion'] == 'registrarV'){
     $datosGuardar = [
       "idturno"     => $_POST['idturno'],
       "idadmi"      => $_POST['idadmi'],
       "idmesa"      => $_POST['idmesa'],
       "idTplato"    => $_POST['idTplato'],
-      "idcliente"   => $_POST['idcliente'],
-      "plato"       => $_POST['plato'],
-      "comprobante" => $_POST['comprobante']
+      "plato"       => $_POST['plato']
     ];
 
     $respuesta = $ventas->registrarV($datosGuardar);
