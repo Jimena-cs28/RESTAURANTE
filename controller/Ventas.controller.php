@@ -5,8 +5,15 @@ if(isset($_POST['operacion'])){
 
   $ventas = new Ventas();
 
+  if ($_POST['operacion'] == 'listarDeVenta'){
+    $datos = $ventas->ListarDeVenta();
+    if ($datos){
+      echo json_encode($datos);
+    }
+  }
+
   if ($_POST['operacion'] == 'listarVenta'){
-    $datos = $ventas->ListarVenta();
+    $datos = $ventas->listarventas();
     if ($datos){
       echo json_encode($datos);
     }
@@ -67,7 +74,8 @@ if(isset($_POST['operacion'])){
       "idadmi"      => $_POST['idadmi'],
       "idmesa"      => $_POST['idmesa'],
       "idTplato"    => $_POST['idTplato'],
-      "plato"       => $_POST['plato']
+      "plato"       => $_POST['plato'],
+      "PrecioUni"       => $_POST['PrecioUni']
     ];
 
     $respuesta = $ventas->registrarV($datosGuardar);

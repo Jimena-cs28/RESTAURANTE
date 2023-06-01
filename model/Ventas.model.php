@@ -9,9 +9,22 @@ class Ventas extends Conexion{
     $this->acceso = parent::getConexion();
   }
 
-  public function ListarVenta(){
+  public function ListarDeVenta(){
     try{
       $consulta = $this->acceso->prepare("CALL spu_listar_deventa()");
+      $consulta->execute();
+
+      $datosObtenidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
+      return $datosObtenidos;
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
+  
+  public function listarventas(){
+    try{
+      $consulta = $this->acceso->prepare("CALL spu_listar_venta()");
       $consulta->execute();
 
       $datosObtenidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -112,7 +125,7 @@ class Ventas extends Conexion{
       "message" =>""
     ];
     try{
-      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?)");
+      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?,?)");
       $respuesta["status"] = $consulta->execute(
         array(
           $datos["idturno"],
@@ -120,6 +133,7 @@ class Ventas extends Conexion{
           $datos["idmesa"],
           $datos["idTplato"],
           $datos["plato"],
+          $datos["PrecioUni"]
         )
       );
     }

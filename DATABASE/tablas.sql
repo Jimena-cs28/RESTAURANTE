@@ -1,12 +1,12 @@
 CREATE DATABASE restaurante
 USE restaurante;
 
-CREATE TABLE personas
+CREATE TABLE clientes
 (
-	idpersona 	INT AUTO_INCREMENT PRIMARY KEY,
+	idclientes 	INT AUTO_INCREMENT PRIMARY KEY,
 	nombres		VARCHAR(40)	NOT NULL,
 	apellidos	VARCHAR(50)	NOT NULL,
-	fechanac	DATE 		NOT NULL,
+	fechanac	DATE 		NULL,
 	direccion	VARCHAR(50)	NULL,
 	telefono	CHAR(9)		NOT NULL,
 	dni		CHAR(8)		NULL,
@@ -17,8 +17,9 @@ CREATE TABLE personas
 CREATE TABLE administrador
 (
 	idadmi		INT AUTO_INCREMENT PRIMARY KEY,
-	email			VARCHAR(30) 	NOT NULL,
-	nombreusu	VARCHAR(30)		NOT NULL,
+	nombres		VARCHAR(30)	NOT NULL,
+	apellidos	VARCHAR(30)	NOT NULL,
+	nombreusu	VARCHAR(30)	NOT NULL,
 	claveacceso	VARCHAR(100)	NOT NULL
 );
 
@@ -31,25 +32,25 @@ CREATE TABLE tipopagos
 CREATE TABLE turnos
 (
 	idturno 	INT AUTO_INCREMENT PRIMARY KEY,
-	turno 		CHAR(1)		NOT NULL,
+	turno 		VARCHAR(19)		NOT NULL,
 	horallegada	TIME 		NOT NULL,
-	horasalida  	TIME  		NOT NULL,
-	CONSTRAINT ck_turno CHECK (turno IN ('T','N'))
+	horasalida  	TIME  		NOT NULL
 );
 
 CREATE TABLE tipoPlatos
 (
 	idTplato	INT AUTO_INCREMENT PRIMARY KEY,
 	tipo		VARCHAR(50)	NOT NULL,
-	estado	CHAR(1)		NOT NULL DEFAULT '1'
+	estado	CHAR(1)	NOT NULL DEFAULT '1'
 );
 
 CREATE TABLE mesas
 (
 	idmesa	INT AUTO_INCREMENT PRIMARY KEY,
-	Mesa		SMALLINT		NOT NULL,
-	estado		VARCHAR(20)		NOT NULL
+	Mesa		SMALLINT	NOT NULL,
+	estado		VARCHAR(20)	NOT NULL DEFAULT 'Disponible'
 );
+SELECT * FROM mesas
 
 CREATE TABLE ventas
 (
@@ -59,6 +60,7 @@ CREATE TABLE ventas
 	idmesa		INT 			NOT NULL,
 	idTplato	INT 				NOT NULL,
 	plato		VARCHAR(50) 		NOT NULL,
+	PrecioUni	DECIMAL(5,2)		NOT NULL,
 	CONSTRAINT fk_idturno FOREIGN KEY (idturno) REFERENCES turnos (idturno),
 	CONSTRAINT fk_idcomida FOREIGN KEY (idTplato) REFERENCES tipoPlatos(idTplato),
 	CONSTRAINT fk_idmesa FOREIGN KEY (idmesa) REFERENCES mesas (idmesa),
@@ -68,16 +70,15 @@ CREATE TABLE ventas
 CREATE TABLE detalleVenta
 (
 	iddeventa 	INT AUTO_INCREMENT PRIMARY KEY,
-	idventa		INT 				NOT NULL,
-	idcliente	INT 				NOT NULL,
-	precioUni	DECIMAL(5,2)	NOT NULL,
+	idventa		INT 			NOT NULL,
+	idclientes	INT 			NOT NULL,
 	cantidad 	SMALLINT 		NOT NULL,
-	precioTotal DECIMAL(6,2)NOT NULL,
-	idtipopago 	INT				NOT NULL,
+	precioTotal 	DECIMAL(6,2)		NOT NULL,
+	idtipopago 	INT			NOT NULL,
 	idcomprobante	INT			NOT NULL,
 	CONSTRAINT fk_idtipopago FOREIGN KEY (idtipopago) REFERENCES tipopagos (idtipopago),
 	CONSTRAINT fk_idventa FOREIGN KEY (idventa) REFERENCES ventas(idventa),
-	CONSTRAINT fk_idcliente FOREIGN KEY (idcliente) REFERENCES personas(idpersona),
+	CONSTRAINT fk_idcliente FOREIGN KEY (idclientes) REFERENCES clientes (idclientes),
 	CONSTRAINT fk_idcompro FOREIGN KEY (idcomprobante) REFERENCES comprobante(idcomprobante)
 );
 

@@ -46,37 +46,51 @@ END$$
 DELIMITER $$
 CREATE PROCEDURE spu_listar_venta()
 BEGIN
-	
+	SELECT idventa,turnos.turno,
+	administrador.nombreusu,
+	mesas.Mesa,
+	tipoPlatos.tipo,
+	plato, PrecioUni
+	FROM ventas
+	INNER JOIN turnos ON turnos.idturno = ventas.idturno
+	INNER JOIN mesas ON mesas.idmesa = ventas.idmesa
+	INNER JOIN administrador ON administrador.idadmi = ventas.idadmi
+	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
+	ORDER BY idventa DESC;
 END $$
 
+CALL spu_listar_venta;
 
 DELIMITER $$
 CREATE PROCEDURE  spu_registrar_venta
 (
-	IN _idturno		INT,
+	IN _idturno	INT,
 	IN _idadmi    	INT,
-	IN _idmesa 	 	INT,
+	IN _idmesa 	 INT,
 	IN _idTplato 	INT,
-	IN _plato 		VARCHAR(30)
+	IN _plato 	VARCHAR(30),
+	IN _Preciouni	DECIMAL(5,2)
 )
 BEGIN
-	INSERT INTO ventas (idturno, idadmi, idmesa, idTplato, plato) VALUES
-							(_idturno,_idadmi,_idmesa,_idTplato, _plato);
+	INSERT INTO ventas (idturno, idadmi, idmesa, idTplato, plato, PrecioUni) VALUES
+			(_idturno,_idadmi,_idmesa,_idTplato, _plato, _Preciouni);
 END$$ 
+SELECT * FROM ventas
 
-CALL spu_registrar_venta(1,1,2,1,'Causa');
+CALL spu_registrar_venta(1,1,2,1,'Causa','8');
+
 
 -- CRUD DE  DETALLES VENTAS
 DELIMITER $$
 CREATE PROCEDURE spu_listar_deventa()
 BEGIN
-	SELECT detalleVenta.iddeventa,
+	SELECT iddeventa,
 	turnos.turno,
 	mesas.Mesa,
 	tipoPlatos.tipo,
-	personas.nombres,
-	personas.apellidos,
-	PrecioUni, 
+	clientes.nombres,
+	clientes.apellidos,
+	ventas.PrecioUni, 
 	ventas.plato,
 	cantidad, precioTotal,
 	tipopagos.Tipopago,
@@ -87,11 +101,12 @@ BEGIN
 	INNER JOIN tipopagos ON tipopagos.idtipopago = detalleVenta.idtipopago
 	INNER JOIN turnos ON turnos.idturno = ventas.`idturno`
 	INNER JOIN mesas ON mesas.idmesa = ventas.idmesa
-	INNER JOIN personas ON personas.idpersona = detalleVenta.idcliente
-	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato;
+	INNER JOIN clientes ON clientes.idclientes = detalleVenta.idclientes
+	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
+	ORDER BY iddeventa DESC;
 END $$
 
-CALL spu_listar_venta;
+CALL spu_listar_deventa;
 
 
 

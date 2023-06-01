@@ -52,9 +52,9 @@
       const tabla =document.querySelector("#tabla-ventas");
       const cuerpo = document.querySelector("tbody");
 
-      function listarVentas(){
+      function listarDeVentas(){
         const parametros = new URLSearchParams();
-        parametros.append("operacion", "listarVenta")
+        parametros.append("operacion", "listarDeVenta")
 
         fetch("../controller/Ventas.controller.php", {
           method : "POST",
@@ -89,7 +89,7 @@
       }
 
 
-      listarVentas();
+      listarDeVentas();
     });
   </script>
 </body>
