@@ -18,27 +18,10 @@ CALL spu_login('AriP@gmail.com');
 
 
 SELECT * FROM tipopagos	
-
-
-CALL spu_listar_deventa();
-
-
-SELECT nombres,apellidos 
-FROM personas
-
 SELECT * FROM ventas;
-
 SELECT * FROM personas;
 SELECT * FROM administrador;
 SELECT * FROM comprobante;
-
-DELIMITER $$
-CREATE PROCEDURE spu_listar_admi()
-BEGIN
-	SELECT idadmi, nombreusu
-	FROM administrador;
-END$$
-
 
 -- CRUD DE VENTAS
 
@@ -75,10 +58,58 @@ BEGIN
 	INSERT INTO ventas (idturno, idadmi, idmesa, idTplato, plato, PrecioUni) VALUES
 			(_idturno,_idadmi,_idmesa,_idTplato, _plato, _Preciouni);
 END$$ 
+
 SELECT * FROM ventas
 
 CALL spu_registrar_venta(1,1,2,1,'Causa','8');
 
+DELIMITER $$
+CREATE PROCEDURE spueliminarventa
+(
+	IN _idventa INT
+)
+BEGIN
+	DELETE FROM ventas WHERE idventa =_idventa;
+END$$
+
+CALL spueliminarventa();
+
+
+DELIMITER $$
+CREATE PROCEDURE spu_buscar_venta
+(
+	IN _idventa INT
+)
+BEGIN
+	SELECT * FROM ventas WHERE idventa = _idventa;
+END $$
+
+CALL spu_buscar_venta(2);
+SELECT * FROM ventas
+
+DELIMITER $$
+CREATE PROCEDURE spu_venta_editar
+(
+	IN _idventa INT,
+	IN _idturno INT,
+	IN _idmesa INT,
+	IN _idTplato INT,
+	IN _plato  VARCHAR(17),
+	IN _PrecioUni DECIMAL(5,2)
+)
+BEGIN
+	UPDATE ventas SET
+	idturno = _idturno,
+	idmesa = _idmesa,
+	idTplato = _idTplato,
+	plato = _plato,
+	PrecioUni = _PrecioUni
+	WHERE idventa = _idventa;
+END $$
+
+CALL spu_venta_editar(4,2,1,4,'Gaseosa','9');
+
+SELECT * FROM ventas
 
 -- CRUD DE  DETALLES VENTAS
 DELIMITER $$

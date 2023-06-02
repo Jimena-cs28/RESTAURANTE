@@ -50,6 +50,7 @@ CREATE TABLE mesas
 	Mesa		SMALLINT	NOT NULL,
 	estado		VARCHAR(20)	NOT NULL DEFAULT 'Disponible'
 );
+
 SELECT * FROM mesas
 
 CREATE TABLE ventas

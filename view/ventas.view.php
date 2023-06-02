@@ -12,7 +12,6 @@
   <!-- DataTable -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-
 </head>
 <body>
   <nav>
@@ -22,7 +21,7 @@
   </nav>
   <div class="container">
     <div class="row">
-
+    <div class="col-md-12">
       <table class="table table-md table-striped mt-4" id="tabla-ventas">
         <thead>
           <tr>
@@ -45,6 +44,7 @@
         </tbody>
       </table>
     </div>
+    
   </div>
   
   <script>
@@ -56,7 +56,7 @@
         const parametros = new URLSearchParams();
         parametros.append("operacion", "listarDeVenta")
 
-        fetch("../controller/Ventas.controller.php", {
+        fetch("../controller/detalleV.controller.php", {
           method : "POST",
           body:parametros
         })
@@ -87,8 +87,6 @@
           });
         });
       }
-
-
       listarDeVentas();
     });
   </script>
