@@ -40,43 +40,43 @@ if (!isset($_SESSION['iniciarSesion']) || !$_SESSION['iniciarSesion']['status'])
       </div>
     </form>
   </div>
-    
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
   <script>
-      document.addEventListener("DOMContentLoaded",() => {
-        const btIniciar = document.querySelector("#entrar");
-        const txtcontra = document.querySelector("#contraseña");
+      $(document).ready(function(){
 
-        function iniciarsesion(){
-          const usuario = document.querySelector("#usuario");
-          const claveacceso = document.querySelector("#contraseña");
-
-          const parametros = new URLSearchParams();
-          parametros.append("operacion", "iniciarSesion")
-          parametros.append("usuario", usuario.value)
-          parametros.append("clave", claveacceso.value)
-
-          fetch(`./controller/usuario.php`, {
-            method: 'POST',
-            body: parametros
-          })
-            .then(respuesta => respuesta.json())
-            .then(datos => {
-              if (!datos.status){
-                alert(datos.mensaje);
-                usuario.focus();
+        function login(){
+          const datos = {
+            "operacion"   : "iniciarSesion",
+            "email"       : $("#usuario").val(),
+            "h"    : $("#contraseña").val()
+          }; 
+          
+          $.ajax({
+            url: 'controller/usuario.php',
+            type: 'GET',
+            data: datos,
+            dataType: 'JSON',
+            success: function (result){
+              console.log(result);
+              if (result.login){
+                alert(`Bienvenido: ${result.apellidos} ${result.nombres}`);
+                window.location.href = `view/index.html`;
               }else{
-                window.location.href = './view/';
+                alert(result.mensaje);
               }
-            })
-            .catch(error => {
-            });
+            }
+          });
         }
 
-        txtcontra.addEventListener("keypress", (evt) => {
-          if (evt.charCode == 13) iniciarsesion();
-        });
+        $("#entrar").click(login);
 
-        btIniciar.addEventListener("click", iniciarsesion);
+        $("#contraseña").keypress(function (evt) {
+        if (evt.keyCode == 13){
+          login();
+        }
+      });
       });
   </script>
 

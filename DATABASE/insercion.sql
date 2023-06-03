@@ -27,16 +27,6 @@ INSERT INTO turnos (turno,horallegada,horasalida) VALUES
 SELECT * FROM turnos
 SELECT * FROM tipopagos
 
-INSERT INTO mesas(Mesa) VALUES
-	('1'),
-	('2'),
-	('3'),
-	('4'),
-	('5'),
-	('6'),
-	('7');
-	
-SELECT * FROM mesas;
 
 INSERT INTO tipoPlatos (tipo) VALUES
 	('plato entrada'),
@@ -50,14 +40,14 @@ INSERT INTO comprobante(comprobante) VALUES
 
 SELECT * FROM tipoPlatos
 
-INSERT INTO ventas (idturno,idadmi,idmesa,idTplato,plato,PrecioUni)VALUES
-	(1,1,3,1,'Carapulcra','15');
+INSERT INTO ventas (idturno,idadmi,idTplato,numMesa,plato)VALUES
+	(1,1,3,'1','Carapulcra');
 	
 SELECT * FROM ventas
 SELECT * FROM detalleVenta
 
-INSERT INTO detalleVenta (idventa,idclientes,cantidad,precioTotal,idtipopago,idcomprobante) VALUES
-	(1,1,'2','30',1,1);
+INSERT INTO detalleVenta (idventa,idclientes,PrecioUni,cantidad,precioTotal,idtipopago,idcomprobante) VALUES
+	(1,1,'15','2','30',1,1);
 	
 	
 	

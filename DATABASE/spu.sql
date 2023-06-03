@@ -3,17 +3,25 @@ USE restaurante;
 DELIMITER $$
 CREATE PROCEDURE spu_login
 (
-   IN _email VARCHAR(70)
+   IN _nombreusu VARCHAR(70)
 )
 BEGIN
-	SELECT email, claveacceso, nombreusu
+	SELECT idadmi, 
+	nombres, 
+	apellidos,
+	nombreusu,
+	claveacceso
 	FROM administrador
-	WHERE email = _email;
+	WHERE nombreusu = _nombreusu;
 END$$
+
+-- 123456
+UPDATE administrador SET claveacceso = 'HmYdDSR2c/GwkOYhMebI6S8s847RlyZVcOloOBIgYCKjpGESopgXgzdbFmWKDPCo'
+WHERE idadmi =  1;
 
 SELECT * FROM administrador
 
-CALL spu_login('AriP@gmail.com');
+CALL spu_login('AdriM8');
 
 
 
@@ -31,12 +39,11 @@ CREATE PROCEDURE spu_listar_venta()
 BEGIN
 	SELECT idventa,turnos.turno,
 	administrador.nombreusu,
-	mesas.Mesa,
+	numMesa,
 	tipoPlatos.tipo,
-	plato, PrecioUni
+	plato
 	FROM ventas
 	INNER JOIN turnos ON turnos.idturno = ventas.idturno
-	INNER JOIN mesas ON mesas.idmesa = ventas.idmesa
 	INNER JOIN administrador ON administrador.idadmi = ventas.idadmi
 	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
 	ORDER BY idventa DESC;
@@ -49,19 +56,18 @@ CREATE PROCEDURE  spu_registrar_venta
 (
 	IN _idturno	INT,
 	IN _idadmi    	INT,
-	IN _idmesa 	 INT,
 	IN _idTplato 	INT,
-	IN _plato 	VARCHAR(30),
-	IN _Preciouni	DECIMAL(5,2)
+	IN _mesa 	 INT,
+	IN _plato 	VARCHAR(30)
 )
 BEGIN
-	INSERT INTO ventas (idturno, idadmi, idmesa, idTplato, plato, PrecioUni) VALUES
-			(_idturno,_idadmi,_idmesa,_idTplato, _plato, _Preciouni);
+	INSERT INTO ventas (idturno, idadmi, idTplato,numMesa,  plato) VALUES
+				(_idturno,_idadmi,_idTplato,_mesa,_plato);
 END$$ 
 
 SELECT * FROM ventas
 
-CALL spu_registrar_venta(1,1,2,1,'Causa','8');
+CALL spu_registrar_venta(2,1,1,3,'Causa');
 
 DELIMITER $$
 CREATE PROCEDURE spueliminarventa
@@ -74,7 +80,7 @@ END$$
 
 CALL spueliminarventa();
 
-
+-- no ejeute
 DELIMITER $$
 CREATE PROCEDURE spu_buscar_venta
 (
@@ -92,22 +98,31 @@ CREATE PROCEDURE spu_venta_editar
 (
 	IN _idventa INT,
 	IN _idturno INT,
-	IN _idmesa INT,
+	IN _mesa INT,
 	IN _idTplato INT,
-	IN _plato  VARCHAR(17),
-	IN _PrecioUni DECIMAL(5,2)
+	IN _plato  VARCHAR(17)
 )
 BEGIN
 	UPDATE ventas SET
 	idturno = _idturno,
-	idmesa = _idmesa,
+	numMesa = _mesa,
 	idTplato = _idTplato,
-	plato = _plato,
-	PrecioUni = _PrecioUni
+	plato = _plato
 	WHERE idventa = _idventa;
 END $$
 
-CALL spu_venta_editar(4,2,1,4,'Gaseosa','9');
+CALL spu_venta_editar(3,2,2,3,'Cebi');
+
+DELIMITER $$
+CREATE PROCEDURE spu_obtener_venta
+(
+	IN _idventa INT
+)
+BEGIN 
+	SELECT * FROM ventas WHERE idventa = _idventa;
+END$$
+
+CALL spu_obtener_venta(1);
 
 SELECT * FROM ventas
 
@@ -117,11 +132,11 @@ CREATE PROCEDURE spu_listar_deventa()
 BEGIN
 	SELECT iddeventa,
 	turnos.turno,
-	mesas.Mesa,
+	numMesa,
 	tipoPlatos.tipo,
 	clientes.nombres,
 	clientes.apellidos,
-	ventas.PrecioUni, 
+	PrecioUni, 
 	ventas.plato,
 	cantidad, precioTotal,
 	tipopagos.Tipopago,
@@ -131,7 +146,6 @@ BEGIN
 	INNER JOIN comprobante ON comprobante.`idcomprobante` = detalleVenta.`idcomprobante`
 	INNER JOIN tipopagos ON tipopagos.idtipopago = detalleVenta.idtipopago
 	INNER JOIN turnos ON turnos.idturno = ventas.`idturno`
-	INNER JOIN mesas ON mesas.idmesa = ventas.idmesa
 	INNER JOIN clientes ON clientes.idclientes = detalleVenta.idclientes
 	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
 	ORDER BY iddeventa DESC;
@@ -139,5 +153,101 @@ END $$
 
 CALL spu_listar_deventa;
 
+DELIMITER $$
+CREATE PROCEDURE spu_registrar_deventa
+(
+	IN _idventa 	INT,
+	IN _idclientes 	INT,
+	IN _precioUni	SMALLINT,
+	IN _cantidad 	SMALLINT,
+	IN _precioTotal DECIMAL(6,2),
+	IN _idtpago 	INT,
+	IN _idcomprobante INT 	
+)
+BEGIN
+	INSERT INTO detalleVenta(idventa,idclientes,PrecioUni,cantidad,precioTotal,idtipopago,idcomprobante) VALUES
+				(_idventa,_idclientes,_precioUni, _cantidad, _precioTotal, _idtpago, _idcomprobante);
+
+END$$
+
+CALL spu_registrar_deventa(2,2,'15','2','30',2,1);
+SELECT * FROM ventas
+SELECT * FROM detalleVenta;
+-- REPORTES.1 falta eje
+
+DELIMITER $$
+CREATE PROCEDURE reporte_turno
+(
+	IN  _turno VARCHAR(17)
+)
+BEGIN 
+	SELECT idventa,turnos.turno,
+	administrador.nombreusu,
+	numMesa,
+	tipoPlatos.tipo,
+	plato
+	FROM ventas
+	INNER JOIN turnos ON turnos.idturno = ventas.idturno
+	INNER JOIN administrador ON administrador.idadmi = ventas.idadmi
+	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
+	WHERE turno = _turno
+	ORDER BY idventa DESC;
+END $$
+
+SELECT * FROM turnos
+CALL reporte_turno('Tarde');
 
 
+-- REPORTES.2 falta eje
+
+DELIMITER $$
+CREATE PROCEDURE reporte_tPlato
+(
+	IN  _TipoP VARCHAR(28)
+)
+BEGIN 
+	SELECT idventa,
+	tipoPlatos.tipo,
+	turnos.turno,
+	administrador.nombreusu,
+	numMesa,
+	plato
+	FROM ventas
+	INNER JOIN turnos ON turnos.idturno = ventas.idturno
+	INNER JOIN administrador ON administrador.idadmi = ventas.idadmi
+	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
+	WHERE tipo = _TipoP
+	ORDER BY idventa DESC;
+END $$
+SELECT * FROM ventas
+
+CALL reporte_tPlato('plato Salida');
+
+-- GRAFICO.1
+
+DELIMITER $$
+CREATE PROCEDURE spu_listarGrafico()
+BEGIN
+	SELECT tipoPlatos.tipo,
+	COUNT(ventas.idventa) 'Total'
+	FROM ventas
+	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
+	GROUP BY tipoPlatos.idTplato;
+END$$
+
+-- GRAFICO.2
+
+DELIMITER $$
+CREATE PROCEDURE spu_listarTurno()
+BEGIN
+	SELECT turnos.turno,
+	COUNT(ventas.idventa) 'Total'
+	FROM ventas
+	INNER JOIN turnos ON turnos.idturno = ventas.idturno
+	GROUP BY turnos.turno;
+END$$
+
+
+CALL spu_listarTurno();
+SELECT * FROM detalleVenta;
+SELECT idventa FROM detalleVenta

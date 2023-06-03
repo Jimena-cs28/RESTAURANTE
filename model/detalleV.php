@@ -28,15 +28,14 @@ class DetalleV extends Conexion{
         "message" => ""
     ];
     try{
-        $consulta = $this->acceso->prepare("CALL spu_venta_editar(?,?,?,?,?,?)");
+        $consulta = $this->acceso->prepare("CALL spu_venta_editar(?,?,?,?,?)");
         $respuesta["status"] = $consulta->execute(
             array(
                 $datos["idventa"],
                 $datos["idturno"],
-                $datos["idmesa"],
+                $datos["numMesa"],
                 $datos["idTplato"],
                 $datos["plato"],
-                $datos["PrecioUni"]
             )
         );
     }
@@ -57,6 +56,43 @@ class DetalleV extends Conexion{
     }
     catch(Exception $e){
         $respuesta["message"] = "No se ah podido completar el proceso. Codigo error: " . $e->getCode();
+    }
+    return $respuesta;
+  }
+  
+  public function obtener($idventa = 0){
+    try{
+      $consulta = $this->acceso->prepare("CALL spu_obtener_venta(?)");
+      $consulta->execute(array($idventa));
+      return $consulta->fetch(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
+
+  public function registrarDe($datos = []){
+
+    $respuesta = [
+      "status" => false,
+      "message" =>""
+    ];
+    try{
+      $consulta = $this->acceso->prepare("CALL spu_registrar_deventa(?,?,?,?,?,?,?)");
+      $respuesta["status"] = $consulta->execute(
+        array(
+          $datos["idventa"],
+          $datos["idclientes"],
+          $datos["PrecioUni"],
+          $datos["cantidad"],
+          $datos["precioTotal"],
+          $datos["idtipopago"],
+          $datos["idcomprobante"]
+        )
+      );
+    }
+    catch(Exception $e){
+      $respuesta["message"] = "No se pudo completar". $e->getCode();
     }
     return $respuesta;
   }

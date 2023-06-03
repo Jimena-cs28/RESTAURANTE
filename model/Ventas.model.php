@@ -9,18 +9,6 @@ class Ventas extends Conexion{
     $this->acceso = parent::getConexion();
   }
 
-  public function ListarDeVenta(){
-    try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_deventa()");
-      $consulta->execute();
-
-      $datosObtenidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
-      return $datosObtenidos;
-    }
-    catch(Exception $e){
-      die($e->getMessage());
-    }
-  }
   
   public function listarventas(){
     try{
@@ -47,20 +35,9 @@ class Ventas extends Conexion{
     }
   }
 
-  public function listarMesa(){
-    try{
-      $consulta = $this->acceso->prepare("SELECT * FROM mesas");
-      $consulta->execute();
-
-      return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(Exception $e){
-      die($e->getMessage());
-    }
-  }
   public function listarCliente(){
     try{
-      $consulta = $this->acceso->prepare("SELECT * FROM personas");
+      $consulta = $this->acceso->prepare("SELECT * FROM clientes");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -125,15 +102,14 @@ class Ventas extends Conexion{
       "message" =>""
     ];
     try{
-      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?,?)");
+      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?)");
       $respuesta["status"] = $consulta->execute(
         array(
           $datos["idturno"],
           $datos["idadmi"],
-          $datos["idmesa"],
+          $datos["numMesa"],
           $datos["idTplato"],
-          $datos["plato"],
-          $datos["PrecioUni"]
+          $datos["plato"]
         )
       );
     }

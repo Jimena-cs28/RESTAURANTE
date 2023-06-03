@@ -5,13 +5,6 @@ if(isset($_POST['operacion'])){
 
   $ventas = new Ventas();
 
-  if ($_POST['operacion'] == 'listarDeVenta'){
-    $datos = $ventas->ListarDeVenta();
-    if ($datos){
-      echo json_encode($datos);
-    }
-  }
-
   if ($_POST['operacion'] == 'listarVenta'){
     $datos = $ventas->listarventas();
     if ($datos){
@@ -21,13 +14,6 @@ if(isset($_POST['operacion'])){
 
   if($_POST['operacion'] == 'listarturno'){
     $datos = $ventas->listarTurno();
-    if($datos){
-      echo json_encode($datos);
-    }
-  }
-
-  if($_POST['operacion'] == 'listarMesa'){
-    $datos = $ventas->listarMesa();
     if($datos){
       echo json_encode($datos);
     }
@@ -72,10 +58,9 @@ if(isset($_POST['operacion'])){
     $datosGuardar = [
       "idturno"     => $_POST['idturno'],
       "idadmi"      => $_POST['idadmi'],
-      "idmesa"      => $_POST['idmesa'],
       "idTplato"    => $_POST['idTplato'],
-      "plato"       => $_POST['plato'],
-      "PrecioUni"       => $_POST['PrecioUni']
+      "numMesa"      => $_POST['numMesa'],
+      "plato"       => $_POST['plato']
     ];
 
     $respuesta = $ventas->registrarV($datosGuardar);

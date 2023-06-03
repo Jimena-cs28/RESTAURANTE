@@ -19,36 +19,39 @@
     <h2>Listado de las ventas</h2>
     <a class="btn btn-outline-dark" href="./index.html">Home</a>
   </nav>
-  <div class="container">
+  <div class="container mt-2">
     <div class="row">
-    <div class="col-md-12">
-      <table class="table table-md table-striped mt-4" id="tabla-ventas">
-        <thead>
-          <tr>
-              <th>#</th>
-              <th>Turno</th>
-              <th>Mesa</th>
-              <th>Tipo de plato</th>
-              <th>nombres</th>
-              <th>apellidos</th>
-              <th>Precio</th>
-              <th>Plato</th>
-              <th>cantidad</th>
-              <th>precioTotal</th>
-              <th>Tipo de Pago</th>
-              <th>Comprobante</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="col-md-12">
+        <table class="table table-md table-striped mt-4" id="tabla-ventas">
+          <thead>
+            <tr>
+                <th>#</th>
+                <th>Turno</th>
+                <th>Mesa</th>
+                <th>Tipo de plato</th>
+                <th>nombres</th>
+                <th>apellidos</th>
+                <th>Precio</th>
+                <th>Plato</th>
+                <th>cantidad</th>
+                <th>precioTotal</th>
+                <th>Tipo de Pago</th>
+                <th>Comprobante</th>
+            </tr>
+          </thead>
+          <tbody>
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
-    
+
   </div>
   
   <script>
+    
     document.addEventListener("DOMContentLoaded", () =>{
+      
       const tabla =document.querySelector("#tabla-ventas");
       const cuerpo = document.querySelector("tbody");
 
@@ -70,7 +73,7 @@
               <tr>
                 <td>${element.iddeventa}</td>
                 <td>${element.turno}</td>
-                <td>${element.Mesa}</td>
+                <td>${element.numMesa}</td>
                 <td>${element.tipo}</td>
                 <td>${element.nombres}</td>
                 <td>${element.apellidos}</td>
@@ -87,6 +90,7 @@
           });
         });
       }
+
       listarDeVentas();
     });
   </script>

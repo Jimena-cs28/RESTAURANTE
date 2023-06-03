@@ -9,10 +9,10 @@ class Usuario extends Conexion{
     $this->acceso = parent::getConexion();
   }
 
-  public function iniciarSesion($email = ''){
+  public function iniciarSesion($nombreusu = ""){
     try{
-      $consulta = $this->acceso->prepare("SELECT * FROM administrador WHERE email = ?");
-      $consulta->execute(array($email));
+      $consulta = $this->acceso->prepare("CALL spu_login(?)");
+      $consulta->execute(array($nombreusu));
 
       return $consulta->fetch(PDO::FETCH_ASSOC);
     }
