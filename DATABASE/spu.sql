@@ -15,15 +15,13 @@ BEGIN
 	WHERE nombreusu = _nombreusu;
 END$$
 
--- 123456
-UPDATE administrador SET claveacceso = 'HmYdDSR2c/GwkOYhMebI6S8s847RlyZVcOloOBIgYCKjpGESopgXgzdbFmWKDPCo'
+-- 1234
+UPDATE administrador SET claveacceso = '$2y$10$yG1Mk28HxCgS1BywcuBfYuvc3STMlR3f771kclJBfyh.CcWGJl/Xa'
 WHERE idadmi =  1;
 
 SELECT * FROM administrador
 
 CALL spu_login('AdriM8');
-
-
 
 SELECT * FROM tipopagos	
 SELECT * FROM ventas;
@@ -91,7 +89,7 @@ BEGIN
 END $$
 
 CALL spu_buscar_venta(2);
-SELECT * FROM ventas
+SELECT * FROM tipoplatos
 
 DELIMITER $$
 CREATE PROCEDURE spu_venta_editar
@@ -167,7 +165,6 @@ CREATE PROCEDURE spu_registrar_deventa
 BEGIN
 	INSERT INTO detalleVenta(idventa,idclientes,PrecioUni,cantidad,precioTotal,idtipopago,idcomprobante) VALUES
 				(_idventa,_idclientes,_precioUni, _cantidad, _precioTotal, _idtpago, _idcomprobante);
-
 END$$
 
 CALL spu_registrar_deventa(2,2,'15','2','30',2,1);
@@ -178,7 +175,7 @@ SELECT * FROM detalleVenta;
 DELIMITER $$
 CREATE PROCEDURE reporte_turno
 (
-	IN  _turno VARCHAR(17)
+	IN  _turno INT
 )
 BEGIN 
 	SELECT idventa,turnos.turno,
@@ -190,12 +187,12 @@ BEGIN
 	INNER JOIN turnos ON turnos.idturno = ventas.idturno
 	INNER JOIN administrador ON administrador.idadmi = ventas.idadmi
 	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
-	WHERE turno = _turno
+	WHERE ventas.idturno = _turno
 	ORDER BY idventa DESC;
 END $$
 
 SELECT * FROM turnos
-CALL reporte_turno('Tarde');
+CALL reporte_turno('1');
 
 
 -- REPORTES.2 falta eje
@@ -203,7 +200,7 @@ CALL reporte_turno('Tarde');
 DELIMITER $$
 CREATE PROCEDURE reporte_tPlato
 (
-	IN  _TipoP VARCHAR(28)
+	IN  _TipoP INT
 )
 BEGIN 
 	SELECT idventa,
@@ -216,12 +213,13 @@ BEGIN
 	INNER JOIN turnos ON turnos.idturno = ventas.idturno
 	INNER JOIN administrador ON administrador.idadmi = ventas.idadmi
 	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
-	WHERE tipo = _TipoP
+	WHERE ventas.idTplato = _TipoP
 	ORDER BY idventa DESC;
 END $$
+
 SELECT * FROM ventas
 
-CALL reporte_tPlato('plato Salida');
+CALL reporte_tPlato('3');
 
 -- GRAFICO.1
 
@@ -234,6 +232,7 @@ BEGIN
 	INNER JOIN tipoPlatos ON tipoPlatos.idTplato = ventas.idTplato
 	GROUP BY tipoPlatos.idTplato;
 END$$
+CALL spu_listarGrafico()
 
 -- GRAFICO.2
 
@@ -246,7 +245,6 @@ BEGIN
 	INNER JOIN turnos ON turnos.idturno = ventas.idturno
 	GROUP BY turnos.turno;
 END$$
-
 
 CALL spu_listarTurno();
 SELECT * FROM detalleVenta;

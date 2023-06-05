@@ -1,9 +1,10 @@
 <?php
 session_start();
-if (!isset($_SESSION['iniciarSesion']) || !$_SESSION['iniciarSesion']['status']){
+if (isset($_SESSION['login']) && $_SESSION['login']['status']){
+  header('Location:./view/');
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,9 +20,7 @@ if (!isset($_SESSION['iniciarSesion']) || !$_SESSION['iniciarSesion']['status'])
 <body>
   <div class="contenedor-formulario contenedor">
     <div class="imagen-formulario">
-            
     </div>
-
     <form class="formulario">
       <div class="texto-formulario">
         <h2>Bienvenido de nuevo</h2>
@@ -40,44 +39,38 @@ if (!isset($_SESSION['iniciarSesion']) || !$_SESSION['iniciarSesion']['status'])
       </div>
     </form>
   </div>
-  <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
   <script>
-      $(document).ready(function(){
+      document.addEventListener("DOMContentLoaded", () => {
+        const email = document.querySelector("#usuario");
+        const clave = document.querySelector("#contraseña");
+        const btnLogin = document.querySelector("#entrar");
 
         function login(){
-          const datos = {
-            "operacion"   : "iniciarSesion",
-            "email"       : $("#usuario").val(),
-            "h"    : $("#contraseña").val()
-          }; 
-          
-          $.ajax({
-            url: 'controller/usuario.php',
-            type: 'GET',
-            data: datos,
-            dataType: 'JSON',
-            success: function (result){
-              console.log(result);
-              if (result.login){
-                alert(`Bienvenido: ${result.apellidos} ${result.nombres}`);
-                window.location.href = `view/index.html`;
-              }else{
-                alert(result.mensaje);
-              }
+          const parametros = new URLSearchParams();
+          parametros.append("operacion", "iniciarSesion");
+          parametros.append("nombreusu", email.value);
+          parametros.append("claveacceso", clave.value);
+
+          fetch('./controller/usuario.php', {
+            method: 'POST',
+            body: parametros
+          })
+          .then(respuesta => respuesta.json())
+          .then(datos => {
+            console.log(datos);
+            if (datos.status) {
+              alert(` Bienvenido: ${datos.apellidos} ${datos.nombres}`)
+              window.location.href = './view/index.php';
+            }else {
+              console.error();
+              alert(datos.mensaje)
             }
-          });
+          })
         }
 
-        $("#entrar").click(login);
-
-        $("#contraseña").keypress(function (evt) {
-        if (evt.keyCode == 13){
-          login();
-        }
-      });
-      });
+        btnLogin.addEventListener("click", login);
+      })
   </script>
 
 </body>

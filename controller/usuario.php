@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+$_SESSION["login"] = [];
 
 require_once '../model/usuario.model.php';
 
@@ -11,21 +12,22 @@ if (isset($_POST['operacion'])){
 
   if ($_POST['operacion'] == 'iniciarSesion'){
     $acceso = [
-      "login"     => false,
-      "apellidos"  => " ",
+      "status"     => false,
+      "apellidos"  => "",
       "nombres"   => "",
       "mensaje"  => ""
     ];
 
-    $data = $usuario->iniciarSesion($_GET['nombreusu']);
-    $claveIngresada = $_GET['h'];
-    
+    $data = $usuario->iniciarSesion($_POST['nombreusu']);
+    $claveIngresada = $_POST['claveacceso'];
+
     if ($data){
       if (password_verify($claveIngresada, $data['claveacceso'])){      
         //Registrar datos de acceso
-        $acceso["login"] = true;
+        $acceso["status"] = true;
         $acceso["apellidos"] = $data["apellidos"];
         $acceso["nombres"] = $data["nombres"];
+        $acceso["mensaje"]="Bienvenida";
       }else{
         $acceso["mensaje"] = "Error en la contraseña";
       }
@@ -33,9 +35,7 @@ if (isset($_POST['operacion'])){
       $acceso["mensaje"] = "Usuario no encontrado";
     }
 
-    $_SESSION['seguridad'] = $acceso;
-    $_SESSION['inicio'] = date('c');
-    $_SESSION['navegador'] = '';
+    $_SESSION['login'] = $acceso;
     
     //Enviar el objeto $acceso a la vista
 
@@ -44,10 +44,10 @@ if (isset($_POST['operacion'])){
   } //Fin operacion = iniciarSesion
 }
 
-// if (isset($_GET['operacion']) == 'destroy'){
-//   session_destroy();
-//   session_unset();
-//   header("location:../");
-// }
+if (isset($_GET['operacion']) == 'destroy'){
+session_destroy();
+session_unset();
+header("location:../login.php");
+}
 
 ?>

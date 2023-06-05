@@ -28,4 +28,12 @@ if(isset($_POST['operacion'])){
       echo json_encode($datos);
     }
   }
+
+  if($_POST['operacion'] == 'listarVenta1'){
+    $datos = $lista->listarVenta1($_POST['plato']);
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+
 }

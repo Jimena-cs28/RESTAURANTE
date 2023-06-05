@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
+  header("Location:../");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,24 +14,36 @@
   <link rel="stylesheet" href="../css/index.css">
   <!-- Estilos Bootstrap 5.2 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
-  <style>
-    body{
-      background-color: rgb(232, 229, 240);
-    }
-    nav{
-      background-color: rgb(95, 96, 110);
-    }
-  </style>
-  
+ 
 </head>
-<body >
-  <nav >
-    <a href="../login.php"><img src="../img/logo.PNG" alt="logo"></a>
-    <h2 id="nav">Bienvenido Realice su venta aqui</h2>
-    <a class="btn btn-outline-dark" href="../reports/reporte.html">Reportes</a>
-    <a class="btn btn-outline-dark" href="./ventas.view.php">Listas de venta</a>
-    <a class="btn btn-outline-dark" href="#">Cerrar Sesion</a>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light align-items-center justify-content-space-around" style="background-color:rgb(8, 235, 220);">
+    <div class="container-fluid">
+      <img src="../img/logo.PNG" alt="logo">
+      <h2>Bienvenido Realice su consulta aqui</h2>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class=" btn btn-outline-dark" href="reporte.html">Reportes</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-dark" href="ventas.view.html">Listas de venta</a>
+          </li>
+          <li class="nav-item">
+            
+          </li>
+          <li class="nav-item">
+            <a class=" btn btn-outline-dark" href="index.php">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-dark" href="../controller/usuario.php?operacion=destroy">Cerrar Sesion</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </nav>
 
   <div class="mt-3">
@@ -72,8 +90,11 @@
           </div>
           
         </form> 
+        <div class="col-md-10">
+          <canvas id="grafico1"></canvas>
+        </div>
       </div>
-      <div class="container col-md-6 mb-5 text-center ">
+      <div class="container col-md-6 mb-5 text-center">
         <table id="tabla-venta"class="table table-striped table-bordered table-sm">
           <thead>
             <tr>
@@ -92,32 +113,22 @@
         </table>
       </div>
     </div>
-  </div>
-
-  <div class="row mb-5">
-    <div class="row mt-5 ">
-      <div class="col-md-5">
-        
+    <button class="btn btn-outline-dark" id="actualizarG2">Actualizar Graficos</button>
+    <button class="btn btn-outline-dark" id="exportar">Generar Reporte de Ventas</button>
+    <div class="row">
+      <div class="col-md-4">
         <canvas id="grafico2"></canvas>
       </div>
+    </div>
+  </div>
+  <div class="mt-3">
+    <div class="row">
       <div class="col-md-5">
-        <h4>Resumen</h4>
-        <ul id="lista">
-
-        </ul>
-
+        <canvas id="grafico1"></canvas>
       </div>
       
     </div>
   </div>
-  <div class="row mt-4">
-    <div class="col-md-5 text-center ">
-      <canvas id="grafico1"></canvas>
-    </div>
-  </div>
-
-</div>
-  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     
@@ -128,35 +139,31 @@
         <div class="modal-content">
           <form action="" autocomplete="off" id="formulario-Venta">
             <div class="card">
-
-            
             <div class="card-header text-black">
               Actualize su venta aqui
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-md-4 mt-4" >
+                <div class="col-md-6 mt-4" >
                   <label for="turno" class="form-label ">Turno</label>
-                  <input type="text" id="md-turno" class="form-control">
+                  <select name="" id="md-turno" class="form-select">
+                  </select>
                 </div>
-                <div class="col-md-4 mt-4">
-                  <label for="admi" class="form-label ">Administrador</label>
-                  <input type="text" id="md-admi" class="form-control">
-                </div>
-                <div class="col-md-4 mt-4">
+                <div class="col-md-6 mt-4">
                   <label for="mesa" class="form-label ">Mesa</label>
                   <input type="text" id="md-mesa" class="form-control">
                 </div>
               </div>
-    
               <div class="row">
-                <div class="col-md-4 mt-4" >
+                <div class="col-md-6 mt-4" >
                   <label for="tipoP" class="form-label">Tipo de Plato</label>
-                  <input type="text" id="md-tipoP" class="form-control">
+                  <select name="" class="form-select" id="md-tipoP">
+
+                  </select>
                 </div>
-                <div class="col-md-4 mt-4">
+                <div class="col-md-6 mt-4">
                   <label for="plato" class="form-label">Plato</label>  
-                  <input type="text" id="md-plato" class="form-control">
+                  <input type="text" class="form-control" id="md-plato">
                 </div>
               </div>
   
@@ -189,7 +196,7 @@
               <div class="row">
                 <div class="col-md-3 mt-4" >
                   <label for="venta" class="form-label ">Venta</label>
-                  <input type="number" class="form-control" id="idventa">
+                  <input type="number" class="form-control" id="venta">
                 </div>
                 <div class="col-md-3 mt-4">
                   <label for="precioT" class="form-label "> Precio </label>
@@ -239,7 +246,6 @@
   </div>
 
   <script>
-    
     function calcular(){
       try{
         var precio = parseFloat(document.querySelector("#precio").value) || 0,
@@ -247,32 +253,125 @@
 
         document.querySelector("#total").value = precio * cantidad;
       }catch(e){
-          
       }
     }
-   
+
     document.addEventListener("DOMContentLoaded", () =>{
       let idventa = '';
       const modal = new bootstrap.Modal(document.querySelector("#modal-actualizar"));
       const btA = document.querySelector("#actualizar");
       const btRegistrarD = document.querySelector("#registrarDeV");
-      const leyenda = document.querySelector("#lista");
       const selecttipo = document.querySelector("#tipo");
       const selectcompro = document.querySelector("#comprobante");
       const selectcliente = document.querySelector("#cliente");
-
+      const Exportar = document.querySelector("#exportar");
+      // modal
+      const mdturno = document.querySelector("#md-turno");
+      const mdTplato  = document.querySelector("#md-tipoP");
+      //select
       const selectPlatp = document.querySelector("#tipoP");
       const table = document.querySelector("#tabla-venta");
       const cuerpo = table.querySelector("tbody");
-      const btMostrar = document.querySelector("#venta");
       const lienzo1 = document.querySelector("#grafico1");
       const lienzo2 = document.querySelector("#grafico2");
       const btregistrar = document.querySelector("#registrar1");
       const selecturno = document.querySelector("#turno");
       const selectadmi = document.querySelector("#admi");
-      
       const plato = document.querySelector("#plato");
+      const btAcualizar2 = document.querySelector("#actualizarG2");
 
+      // graficos
+      const graficoBarras = new Chart(lienzo1, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              backgroundColor: ['#F0DA97','#9DEDDF','#A69DED','#9DEDDF'],
+              label: 'Tipo de platos',
+              data: [],
+            }
+          ]
+        }
+      });
+
+      function renderGrafico(coleccion = []){
+        let etiquetas = [];
+        let datos = [];
+
+        coleccion.forEach(element => {
+          etiquetas.push(element.tipo);
+          datos.push(element.Total);
+
+          const tagL = document.createElement("li");
+          tagL.innerHTML = `${element.tipo}: <strong>${element.Total}</strong>`;
+          
+        });
+
+        graficoBarras.data.labels = etiquetas;
+        graficoBarras.data.datasets[0].data = datos;
+        graficoBarras.update();
+      }
+
+      function loadData(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion", "grafico1");
+
+        fetch(`../controller/grafico.controller.php`,{
+          method: 'POST',
+          body: parametros
+        })
+        .then(respuesta => respuesta.json())
+        .then(datos => {
+          renderGrafico(datos);
+        });
+      }
+
+      const graficoDona = new Chart(lienzo2, {
+        type: 'pie',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              backgroundColor: ['#2E86C1','#A69DED'],
+              label: 'Turnos',
+              data: [],
+            }
+          ]
+        }
+      });
+    
+      function renderGrafico2 (coleccio=[]){
+        let etiqueta = [];
+        let dato = [];
+        coleccio.forEach(element => {
+          etiqueta.push(element.turno);
+          dato.push(element.Total);
+
+          const tagLI = document.createElement("li");
+          tagLI.innerHTML = `${element.turno}: <strong>${element.Total}</strong>`;
+          
+        });
+
+        graficoDona.data.labels = etiqueta;
+        graficoDona.data.datasets[0].data = dato;
+        graficoDona.update();
+      }
+
+      function loadData1(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion", "Grafico2");
+
+        fetch(`../controller/grafico.controller.php`,{
+          method: 'POST',
+          body: parametros
+        })
+        .then(respuesta => respuesta.json())
+        .then(datos => {
+          renderGrafico2(datos);
+        });
+      }
+      // crud de ventas
       cuerpo.addEventListener("click", (event) => {
         if(event.target.classList[0] === 'eliminar'){
           if(confirm("estas seguro de eliminar")){
@@ -288,7 +387,6 @@
             })
             .then(response => response.json())
             .then(datos => {
-              console.log(datos);
               if(datos.status){
                 listarVentas();
               }else{
@@ -300,14 +398,37 @@
         }
       });
 
-      function update(){
+      cuerpo.addEventListener("click", (event) => {
+        if(event.target.classList[0] === 'editar'){
+          idventa = parseInt(event.target.dataset.idventa);
+
+          const parametros = new URLSearchParams();
+          parametros.append("operacion","obtener");
+          parametros.append("idventa", idventa);
+
+          fetch("../controller/detalleV.controller.php", {
+            method: 'POST',
+            body: parametros
+          })
+          .then(response => response.json())
+          .then(datos => {
+            document.querySelector("#md-turno").value = datos.idturno;
+            document.querySelector("#md-mesa").value = datos.numMesa;
+            document.querySelector("#md-tipoP").value = datos.idTplato;
+            document.querySelector("#md-plato").value = datos.plato;
+            modal.toggle();
+          });
+        }
+
+      });
+
+      function updates(){
         if(confirm("Estas seguero de actualizar")){
           const parametros = new URLSearchParams();
           parametros.append("operacion","actualizar");
 
           parametros.append("idventa", idventa);
           parametros.append("idturno", document.querySelector("#md-turno").value);
-          parametros.append("idadmi", document.querySelector("#md-admi").value);
           parametros.append("idTplato", document.querySelector("#md-tipoP").value);
           parametros.append("numMesa", document.querySelector("#md-mesa").value);
           parametros.append("plato", document.querySelector("#md-plato").value);
@@ -327,94 +448,6 @@
           });
         }
       }
-
-      cuerpo.addEventListener("click", (event) => {
-        if(event.target.classList[0] === 'editar'){
-          idventa = parseInt(event.target.dataset.idventa);
-
-          const parametros = new URLSearchParams();
-          parametros.append("operacion","obtener");
-          parametros.append("idventa", idventa);
-
-          fetch("../controller/detalleV.controller.php", {
-            method: 'POST',
-            body: parametros
-          })
-          .then(response => response.json())
-          .then(datos => {
-            document.querySelector("#md-turno").value = datos.idturno;
-            document.querySelector("#md-admi").value = datos.idadmi;
-            document.querySelector("#md-mesa").value = datos.numMesa;
-            document.querySelector("#md-tipoP").value = datos.idTplato;
-            document.querySelector("#md-plato").value = datos.plato;
-            modal.toggle();
-          });
-        }
-
-      });
-
-      const graficoBarras = new Chart(lienzo1, {
-        type: 'bar',
-        data: {
-          labels: [],
-          datasets: [
-            {
-              label: 'HOLLAAA',
-              data: []
-            }
-          ]
-        }
-      });
-
-      function renderGrafico(coleccion = []){
-        let etiquetas = [];
-        let datos = [];
-        leyenda.innerHTML  = ``;
-
-        coleccion.forEach(element => {
-          etiquetas.push(element.tipo);
-          datos.push(element.Total);
-
-          const tagLI = document.createElement("li");
-          tagLI.innerHTML = `${element.tipo}: <strong>${element.Total}</strong>`;
-          leyenda.appendChild(tagLI);
-        });
-
-        graficoBarras.data.labels = etiquetas;
-        graficoBarras.data.datasets[0].data = datos;
-        graficoBarras.update();
-      }
-
-      function loadData(){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion", "grafico1");
-
-        fetch(`./controller/grafico.controller.php`,{
-          method: 'POST',
-          body: parametros
-        })
-        .then(respuesta => respuesta.json())
-        .then(datos =>{
-          renderGrafico(datos);
-        });
-      }
-
-    
-      const graficoDona = new Chart(lienzo2, {
-        type: 'bar',
-        data: {
-          labels: ['Rojo','Amarillo','Azul'],
-          datasets: [
-            {
-              borderColor: '#734C3C',
-              backgroundColor: ['#2E86C1','#9DEDDF','#A69DED',],
-              label: 'Puntos',
-              data: [5,10,15],
-              borderWidth: 1
-            }
-          ]
-        }
-      })
       
       function registrarV(){
         if(confirm("esta seguro de guardar")){
@@ -443,13 +476,13 @@
           })
         }
       }
-      
-      function registrarD(){
-        if(confirm("esta seguro de guardar")){
-          const parametros = new URLSearchParams();
-          parametros.append("operacion", "registrarDE");
 
-          parametros.append("idventa", document.querySelector("#idventa").value);
+      function registrarDetalle(){
+        if(confirm("estas seguro de guardar?")){
+          const parametros = new URLSearchParams();
+          parametros.append("operacion","registrarDE");
+
+          parametros.append("idventa", document.querySelector("#venta").value);
           parametros.append("idclientes", document.querySelector("#cliente").value);
           parametros.append("PrecioUni", document.querySelector("#precio").value);
           parametros.append("cantidad", document.querySelector("#cantidad").value);
@@ -458,19 +491,17 @@
           parametros.append("idcomprobante", document.querySelector("#comprobante").value);
 
           fetch("../controller/detalleV.controller.php" ,{
-            method: 'POST',
+            method:'POST',
             body: parametros
           })
-          .then(response => response.json())
+          .then(respuesta => respuesta.json())
           .then(datos => {
             console.log(datos);
             if(datos.status){
               document.querySelector("#formulario-Dventa").reset();
-              document.querySelector("#idventa").focus();
-            }else{
-              alert(datos.message);
+              document.querySelector("#venta").focus();
             }
-          });
+          })
         }
       }
 
@@ -494,6 +525,46 @@
         });
       }
       
+      function listarMdTurno (){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","listarturno");
+
+        fetch("../controller/Ventas.controller.php", {
+          method: 'POST',
+          body: parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          mdturno.innerHTML = "<option value=''>Seleccione</option>";
+          datos.forEach(element => {
+            let opcion = `
+              <option value='${element.idturno}'>${element.turno}</option> 
+            `;
+            mdturno.innerHTML += opcion;
+          });
+        });
+      }
+      
+      function listarMdPlato(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","listarPlato");
+
+        fetch("../controller/Ventas.controller.php", {
+          method: 'POST',
+          body: parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          mdTplato.innerHTML = "<option value=''>Seleccione</option>";
+          datos.forEach(element => {
+            let platos = `
+              <option value='${element.idTplato}'>${element.tipo}</option> 
+            `;
+            mdTplato.innerHTML += platos;
+          });
+        });
+      }
+
       function listarAdmi (){
         const parametros = new URLSearchParams();
         parametros.append("operacion","listarAdmi");
@@ -534,8 +605,27 @@
         });
       }
 
-      
       function listarCliente (){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","listarCliente");
+
+        fetch("../controller/Ventas.controller.php", {
+          method: 'POST',
+          body: parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          selectcliente.innerHTML = "<option value=''>Seleccione</option>";
+          datos.forEach(element => {
+            let opcion3 = `
+              <option value='${element.idclientes}'>${element.nombres}${element.apellidos}</option> 
+            `;
+            selectcliente.innerHTML += opcion3;
+          });
+        });
+      }
+
+      function listarclientemd(){
         const parametros = new URLSearchParams();
         parametros.append("operacion","listarCliente");
 
@@ -568,7 +658,7 @@
           selecttipo.innerHTML = "<option value=''>Seleccione</option>";
           datos.forEach(element => {
             let pago = `
-              <option value='${element.Tipopago}'>${element.Tipopago}</option> 
+              <option value='${element.idtipopago}'>${element.Tipopago}</option> 
             `;
             selecttipo.innerHTML += pago;
           });
@@ -595,7 +685,6 @@
         });
       }
       
-
       function listarVentas(){
         const parametros = new URLSearchParams();
         parametros.append("operacion", "listarVenta")
@@ -617,8 +706,8 @@
                 <td>${element.tipo}</td>
                 <td>${element.plato}</td>
                 <td>
-                  <a href='#' class='eliminar' data-idventa='${element.idventa}' class='btn btn-sm btn-danger'>Quitar</a>
-                  <a href='#' class='editar' data-idventa='${element.idventa}' class='btn btn-sm btn-info'>Editar</a>
+                  <a href='#' class='eliminar' data-idventa='${element.idventa}'>Quitar</a>
+                  <a href='#' class='editar' data-idventa='${element.idventa}'>Editar</a>  
                 </td>
               </tr>`
               ;
@@ -626,12 +715,24 @@
           });
         });
       }
-      
-      
-      
-      btRegistrarD.addEventListener("click", registrarD);
-      btregistrar.addEventListener("click", registrarV);
+      //reportes
+      function PDF(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion", "listarVenta");
+        window.open(`../reports/ventas.report.php?${parametros}`,'_blank');
+      }
 
+      //eventos
+      btA.addEventListener("click", updates);
+      btAcualizar2.addEventListener("click", loadData1);
+      btAcualizar2.addEventListener("click", loadData);
+      btregistrar.addEventListener("click", registrarV);
+      btRegistrarD.addEventListener("click", registrarDetalle);
+
+      Exportar.addEventListener("click", PDF);
+
+      listarMdTurno();
+      listarMdPlato();
       listarVentas();
       listarPlato();
       listarCliente();
@@ -639,9 +740,8 @@
       listarPago();
       listarAdmi();
       listarTurno();
-      btA.addEventListener("click", update);
-      
     });
   </script>
+  
 </body>
 </html>

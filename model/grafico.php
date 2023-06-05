@@ -20,4 +20,14 @@ class Grafico extends Conexion{
             die($e->getMessage());
         }
     }
+    public function Grafico2(){
+        try{
+            $consulta = $this->conexion->prepare("CALL spu_listarTurno()");
+            $consulta->execute();
+            return $consulta->fetchAll(PDO::FETCH_ASSOC);
+      
+        }catch(Exception $e){
+            die($e->getMessage());
+        }
+    }
 }
