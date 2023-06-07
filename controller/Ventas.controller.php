@@ -23,11 +23,7 @@ if(isset($_POST['operacion'])){
   if($_POST['operacion'] == 'registrarV'){
     $datosGuardar = [
       "idusuario"     => $_POST['idusuario'],
-      "numMesa"      => $_POST['numMesa'],
-      "idcliente"    => $_POST['idcliente'],
-      "tipopago"      => $_POST['tipopago'],
-      "comprobante"       => $_POST['comprobante'],
-      "totalpagar"       => $_POST['totalpagar']
+      "numMesa"      => $_POST['numMesa']
     ];
 
     $respuesta = $ventas->registrarV($datosGuardar);

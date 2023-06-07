@@ -15,7 +15,8 @@ if (isset($_POST['operacion'])){
       "status"     => false,
       "apellidos"  => "",
       "nombres"   => "",
-      "mensaje"  => ""
+      "mensaje"  => "",
+      "idusuario" => ""
     ];
 
     $data = $usuario->iniciarSesion($_POST['nombreusu']);
@@ -27,7 +28,8 @@ if (isset($_POST['operacion'])){
         $acceso["status"] = true;
         $acceso["apellidos"] = $data["apellidos"];
         $acceso["nombres"] = $data["nombres"];
-        $acceso["mensaje"]="Bienvenida";
+        $acceso["mensaje"]= "Bienvenida";
+        $acceso["idusuario"]= $data["idusuario"];
       }else{
         $acceso["mensaje"] = "Error en la contraseña";
       }

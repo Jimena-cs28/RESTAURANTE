@@ -64,7 +64,7 @@ CREATE PROCEDURE spu_login
 	IN _usuario VARCHAR(30)
 )
 BEGIN
-	SELECT usuarios.idusuario, usuarios.nombreusuario, claveacceso,
+	SELECT usuarios.0, usuarios.nombreusuario, claveacceso,
 		personas.nombres, personas.apellidos	
 	FROM usuarios
 	INNER JOIN personas ON personas.idpersona = usuarios.idpersona
@@ -238,7 +238,8 @@ BEGIN
 	WHERE ventas.idventa = _idventa;
 END $$
 SELECT * FROM detalleventas
-CALL spu_listar_deventa()
+CALL spu_listar_deventa(1);
+
 
 SELECT * FROM detalleventas
 -- lista General
@@ -274,21 +275,14 @@ DELIMITER $$
 CREATE PROCEDURE spu_registrar_venta
 (
 	IN _idusu 	INT,
-	IN _mesa 	SMALLINT,
-	IN _idcliente	SMALLINT,
-	IN _tipopago	VARCHAR(30),
-	IN _comprobante VARCHAR(20),
-	IN _totalpagar	DECIMAL(6,2)
+	IN _mesa 	SMALLINT
 )
-BEGIN
-	IF _idcliente = '' THEN SET _idcliente = NULL; END IF;
-	IF _tipopago = '' THEN SET _idcliente = NULL; END IF;
-	IF _comprobante = '' THEN SET _idcliente = NULL; END IF;
-	IF _totalpagar = '' THEN SET _idcliente = NULL; END IF;
-	
-	INSERT INTO ventas(idusuario,numMesa,idcliente,tipopago,comprobante,totalpagar) VALUES
-			(_idventa, _mesa, _idcliente, _tipopago, _comprobante, _totalpagar);
+BEGIN	
+	INSERT INTO ventas(idusuario,numMesa) VALUES
+			(_idusu, _mesa);
 END$$
+
+CALL spu_registrar_venta(1,3);
 
 SELECT * FROM ventas
 SELECT * FROM detalleventas

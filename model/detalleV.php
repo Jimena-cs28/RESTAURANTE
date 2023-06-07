@@ -78,7 +78,7 @@ class DetalleV extends Conexion{
       "message" =>""
     ];
     try{
-      $consulta = $this->acceso->prepare("CALL spu_registrar_deventa(?,?,?,?)");
+      $consulta = $this->acceso->prepare("CALL spu_registrar_detalleventa(?,?,?,?)");
       $respuesta["status"] = $consulta->execute(
         array(
           $datos["idventa"],

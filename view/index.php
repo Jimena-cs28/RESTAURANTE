@@ -2,7 +2,9 @@
 session_start();
 if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
   header("Location:../");
+  
 }
+$datoID = json_encode($_SESSION['login']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +54,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
     </div>
     <div class="row">
       <div class="col-md-3">
-        <button class="btn btn-dark" type="button">Registrar Venta</button>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal-registrar-venta" type="button">Registrar Venta</button>
       </div>
     </div>
     <div class="row">
@@ -184,12 +186,12 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <form action="" autocomplete="off" id="formulario-Venta">
+        <form action="" autocomplete="off" id="formulario-Venta-registro">
           <div class="modal-body">
             <div class="row">
               <div class="col-md-6">
                 <label for="r-mesa" class="form-label ">Mesa</label>
-                <select name=""class="form-control" id="r-mesa">
+                <select name="r-mesa"class="form-control" id="r-mesa">
                   <option value=""></option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -216,161 +218,22 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
 
 
   <script>
-    function calcular(){
-      try{
-        var precio = parseFloat(document.querySelector("#precio").value) || 0,
-        cantidad = parseFloat(document.querySelector("#cantidad").value) || 0;
-
-        document.querySelector("#total").value = precio * cantidad;
-      }catch(e){
-      }
-    }
 
     document.addEventListener("DOMContentLoaded", () =>{
       let idventa = '';
       const modal = new bootstrap.Modal(document.querySelector("#modal-actualizar-venta"));
-      const modalRegistrarVenta = new bootstrap.Modal(document.querySelector("#modal-registrar-venta"));
-      const btA = document.querySelector("#actualizar");
-      const btRegistrarD = document.querySelector("#registrarDeV");
-      const selecttipo = document.querySelector("#tipo");
-      const selectcompro = document.querySelector("#comprobante");
       const selectcliente = document.querySelector("#cliente");
-      const Exportar = document.querySelector("#exportar");
-      // modal
-      const mdturno = document.querySelector("#md-turno");
-      const mdTplato  = document.querySelector("#md-tipoP");
-      //select
-      const selectPlatp = document.querySelector("#tipoP");
+
       const table2 = document.querySelector("#resumenventa");
       const cuerpoD = table2.querySelector("tbody");
       const table = document.querySelector("#tabla-venta");
       const cuerpo = table.querySelector("tbody");
-      const lienzo1 = document.querySelector("#grafico1");
-      const lienzo2 = document.querySelector("#grafico2");
-      const btregistrar = document.querySelector("#registrar1");
+
       const selectmesa = document.querySelector("#md-mesa");
-      const plato = document.querySelector("#plato");
-      const btAcualizar2 = document.querySelector("#actualizarG2");
       const t_venta = document.querySelector("#t-venta");
       const r_venta = document.querySelector("#r-venta");
 
-      // graficos
-      const graficoBarras = new Chart(lienzo1, {
-        type: 'bar',
-        data: {
-          labels: [],
-          datasets: [
-            {
-              backgroundColor: ['#F0DA97','#9DEDDF','#A69DED','#9DEDDF'],
-              label: 'Tipo de platos',
-              data: [],
-            }
-          ]
-        }
-      });
 
-      function renderGrafico(coleccion = []){
-        let etiquetas = [];
-        let datos = [];
-
-        coleccion.forEach(element => {
-          etiquetas.push(element.categoria);
-          datos.push(element.Total);
-
-          const tagL = document.createElement("li");
-          tagL.innerHTML = `${element.tipo}: <strong>${element.Total}</strong>`;
-          
-        });
-
-        graficoBarras.data.labels = etiquetas;
-        graficoBarras.data.datasets[0].data = datos;
-        graficoBarras.update();
-      }
-
-      function loadData(){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion", "grafico1");
-
-        fetch(`../controller/grafico.controller.php`,{
-          method: 'POST',
-          body: parametros
-        })
-        .then(respuesta => respuesta.json())
-        .then(datos => {
-          renderGrafico(datos);
-        });
-      }
-
-      const graficoDona = new Chart(lienzo2, {
-        type: 'pie',
-        data: {
-          labels: [],
-          datasets: [
-            {
-              backgroundColor: ['#2E86C1','#A69DED'],
-              label: 'Turnos',
-              data: [],
-            }
-          ]
-        }
-      });
-    
-      function renderGrafico2 (coleccio=[]){
-        let etiqueta = [];
-        let dato = [];
-        coleccio.forEach(element => {
-          etiqueta.push(element.turno);
-          dato.push(element.Total);
-
-          const tagLI = document.createElement("li");
-          tagLI.innerHTML = `${element.turno}: <strong>${element.Total}</strong>`;
-          
-        });
-
-        graficoDona.data.labels = etiqueta;
-        graficoDona.data.datasets[0].data = dato;
-        graficoDona.update();
-      }
-
-      function loadData1(){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion", "Grafico2");
-
-        fetch(`../controller/grafico.controller.php`,{
-          method: 'POST',
-          body: parametros
-        })
-        .then(respuesta => respuesta.json())
-        .then(datos => {
-          renderGrafico2(datos);
-        });
-      }
-      // crud de ventas
-      cuerpo.addEventListener("click", (event) => {
-        if(event.target.classList[0] === 'eliminar'){
-          if(confirm("estas seguro de eliminar")){
-            idventa = parseInt(event.target.dataset.idventa);
-
-            const parametros = new URLSearchParams();
-            parametros.append("operacion","eliminar");
-            parametros.append("idventa", idventa);
-
-            fetch("../controller/detalleV.controller.php",{
-              method: 'POST',
-              body: parametros
-            })
-            .then(response => response.json())
-            .then(datos => {
-              if(datos.status){
-                listarVentas();
-              }else{
-                alert(datos.message);
-              }
-            });
-
-          }
-        }
-      });
 
       cuerpo.addEventListener("click", (event) => {
         if(event.target.classList[0] === 'editar'){
@@ -387,15 +250,12 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
             .then(response => response.json())
             .then(datos => {
               selectmesa.value = datos.numMesa;
+              
               listardeVentas();
               t_venta.addEventListener("click", updates);
               modal.toggle();
-            })
-
-            
-          
+            })           
         }
-
       });
 
       function updates(){
@@ -426,15 +286,13 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
       }
       
       function registrarV(){
+        const respuesta = <?php echo $datoID;?>;
+        const idusuario = respuesta.idusuario;
         if(confirm("esta seguro de guardar")){
           const parametros = new URLSearchParams();
           parametros.append("operacion", "registrarV");
-
-          parametros.append("idturno", document.querySelector("#turno").value);
-          parametros.append("idadmi", document.querySelector("#admi").value);
-          parametros.append("numMesa", document.querySelector("#mesa").value);
-          parametros.append("idTplato", document.querySelector("#tipoP").value);
-          parametros.append("plato", document.querySelector("#plato").value);
+          parametros.append("idusuario", parseInt(idusuario));
+          parametros.append("numMesa", document.querySelector("#r-mesa").value);
 
           fetch("../controller/Ventas.controller.php" ,{
             method: 'POST',
@@ -444,10 +302,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
           .then(datos => {
             if(datos.status){
               listarVentas();
-              document.querySelector("#formulario-Venta").reset();
-              document.querySelector("#turno").focus();
-            }else{
-              alert(datos.message);
+              document.querySelector("#formulario-Venta-registro").reset();
             }
           })
         }
@@ -475,7 +330,6 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
             console.log(datos);
             if(datos.status){
               document.querySelector("#formulario-Dventa").reset();
-              document.querySelector("#venta").focus();
             }
           })
         }
@@ -501,7 +355,6 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
         });
       }
 
-      
       function listarVentas(){
         const parametros = new URLSearchParams();
         parametros.append("operacion", "listarVenta")
@@ -513,6 +366,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
         .then(response => response.json())
         .then(datos => {
           cuerpo.innerHTML = ``;
+          console.log(datos);
           datos.forEach(element => {
             const Vopcion1 = `
               <tr>
@@ -526,7 +380,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
                 <td>${element.totalpagar}</td>
                 <td>${element.estadomesa}</td>
                 <td>
-                  <a href='#' class='eliminar' data-idventa='${element.idventa}'>Quitar</a>
+                  <a href='#' class='eliminar' data-idventa='${element.idventa}'>Registrar</a>
                   <a href='#' type='button' class='editar' data-idventa='${element.idventa}'>editar</a>  
                 </td>
               </tr>`
@@ -547,7 +401,8 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
         .then(response => response.json())
         .then(datos => {
           cuerpoD.innerHTML = ``;
-          datos.forEach(element => {
+          if(datos){
+            datos.forEach(element => {
             const Vopcion1 = `
               <tr>
                 <td>${element.iddetalleventa}</td>
@@ -557,28 +412,18 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
               </tr>`
               ;
               cuerpoD.innerHTML +=Vopcion1;
-          });
+            });
+          }else{
+            table2.reset();
+          }
+          
         });
       }
-
-      //reportes
-      // function PDF(){
-      // const parametros = new URLSearchParams();
-      // parametros.append("operacion", "listarVenta");
-      // window.open(`../reports/ventas.report.php?${parametros}`,'_blank');
-      // }
-
-      //eventos
-      // btA.addEventListener("click", updates);
-      // btAcualizar2.addEventListener("click", loadData);
-      // btregistrar.addEventListener("click", registrarV);
-      // btRegistrarD.addEventListener("click", registrarDetalle);
-
-      // Exportar.addEventListener("click", PDF);
 
       listarVentas();
       listardeVentas();
       listarCliente();
+      r_venta.addEventListener("click", registrarV);
     });
   </script>
   

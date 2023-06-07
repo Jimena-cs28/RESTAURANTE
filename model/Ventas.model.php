@@ -55,15 +55,11 @@ class Ventas extends Conexion{
       "message" =>""
     ];
     try{
-      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?,?)");
+      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?)");
       $respuesta["status"] = $consulta->execute(
         array(
           $datos["idusuario"],
-          $datos["numMesa"],
-          $datos["idcliente"],
-          $datos["tipopago"],
-          $datos["comprobante"],
-          $datos["totalpagar"]
+          $datos["numMesa"]
         )
       );
     }
