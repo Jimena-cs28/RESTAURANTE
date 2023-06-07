@@ -10,7 +10,7 @@ use Spipu\Html2Pdf\Exception\ExceptionFormatter;
 try {
   //instanciar clase 
   $listar = new Listar();
-  $datos = $listar->listarVenta($_GET['turno']);
+  $datos = $listar->listarVenta($_GET['usuario']);
 
   ob_start();
 

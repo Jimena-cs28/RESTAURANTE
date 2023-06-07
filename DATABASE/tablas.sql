@@ -29,30 +29,41 @@ CREATE TABLE tipopagos
 	Tipopago		VARCHAR(30)
 );
 
+CREATE TABLE platos
+(
+	idplato		INT AUTO_INCREMENT PRIMARY KEY,
+	idTplato	INT		NOT NULL,
+	platos 		VARCHAR(40)	NOT NULL,
+);
+
 CREATE TABLE turnos
 (
 	idturno 	INT AUTO_INCREMENT PRIMARY KEY,
-	turno 		VARCHAR(19)		NOT NULL,
-	horallegada	TIME 		NOT NULL,
+	turno 		VARCHAR(19)	NOT NULL,
+	horainicio	TIME 		NOT NULL,
 	horasalida  	TIME  		NOT NULL
 );
 
 CREATE TABLE tipoPlatos
 (
 	idTplato	INT AUTO_INCREMENT PRIMARY KEY,
+	idplato		INT		NOT NULL,
 	tipo		VARCHAR(50)	NOT NULL,
-	estado	CHAR(1)	NOT NULL DEFAULT '1'
+	estado		CHAR(1)	NOT NULL DEFAULT '1'
+	CONSTRAINT fk_idplato FOREIGN KEY (idplato) REFERENCES platos (idplato)
 );
 
 
 CREATE TABLE ventas
 (
 	idventa		INT AUTO_INCREMENT PRIMARY KEY,
-	idturno		INT 			NOT NULL,
-	idadmi		INT 			NOT NULL,
-	idTplato	INT 			NOT NULL,
-	numMesa		SMALLINT		NOT NULL,
-	plato		VARCHAR(50) 		NOT NULL,
+	idturno		INT 		NOT NULL,
+	idadmi		INT 		NOT NULL,
+	idTplato	INT 		NOT NULL,
+	idcliente	INT		NOT NULL,
+	idTplato	INT		NOT NULL,
+	precioUni	DECIMAL(5,2)	
+	numMesa		SMALLINT	NOT NULL,
 	CONSTRAINT fk_idturno FOREIGN KEY (idturno) REFERENCES turnos (idturno),
 	CONSTRAINT fk_idcomida FOREIGN KEY (idTplato) REFERENCES tipoPlatos(idTplato),
 	CONSTRAINT fk_idadmi FOREIGN KEY (idadmi) REFERENCES administrador (idadmi)
@@ -62,23 +73,12 @@ CREATE TABLE detalleVenta
 (
 	iddeventa 	INT AUTO_INCREMENT PRIMARY KEY,
 	idventa		INT 			NOT NULL,
-	idclientes	INT 			NOT NULL,
-	PrecioUni	DECIMAL(5,2)		NOT NULL,
 	cantidad 	SMALLINT 		NOT NULL,
 	precioTotal 	DECIMAL(6,2)		NOT NULL,
-	idtipopago 	INT			NOT NULL,
-	idcomprobante	INT			NOT NULL,
-	CONSTRAINT fk_idtipopago FOREIGN KEY (idtipopago) REFERENCES tipopagos (idtipopago),
+	comprobante	VARCHAR(10)		NOT NULL,
 	CONSTRAINT fk_idventa FOREIGN KEY (idventa) REFERENCES ventas(idventa),
-	CONSTRAINT fk_idcliente FOREIGN KEY (idclientes) REFERENCES clientes (idclientes),
-	CONSTRAINT fk_idcompro FOREIGN KEY (idcomprobante) REFERENCES comprobante(idcomprobante)
 );
 
-CREATE TABLE comprobante
-(
-	idcomprobante INT AUTO_INCREMENT PRIMARY KEY,
-	comprobante		VARCHAR(20)	NOT NULL
-);
 
 
 

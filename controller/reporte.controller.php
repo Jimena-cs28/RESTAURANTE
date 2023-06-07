@@ -5,9 +5,8 @@ require_once '../model/reporte.php';
 if(isset($_POST['operacion'])){
   $lista = new Listar();
 
-  if($_POST['operacion'] == 'listarTurno'){
-    
-    $datos = $lista->listarTurno();
+  if($_POST['operacion'] == 'listarUsu'){
+    $datos = $lista->listarUsu();
     if($datos){
       echo json_encode($datos);
     }
@@ -22,8 +21,7 @@ if(isset($_POST['operacion'])){
   }
 
   if($_POST['operacion'] == 'listarVenta'){
-
-    $datos = $lista->listarVenta($_POST['turno']);
+    $datos = $lista->listarVenta($_POST['usuario']);
     if($datos){
       echo json_encode($datos);
     }

@@ -46,7 +46,7 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-8">
-                <select name="turno" id="turno" class="form-select">
+                <select name="turno" id="usuario" class="form-select">
                   <option value="">seleccione</option>
                 </select>
               </div>
@@ -87,11 +87,12 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Turno</th>
-                <th>Administrador</th>
+                <th>usuario</th>
+                <th>tipo de pago</th>
+                <th>comprobante</th>
+                <th>total</th>
                 <th>Mesa</th>
-                <th>Menu</th>
-                <th>Plato</th>
+                <th>fecha</th>
               </tr>
             </thead>
             <tbody>
@@ -120,7 +121,7 @@
     </div>
     <script>
       document.addEventListener("DOMContentLoaded",() =>{
-        const selectTurno = document.querySelector("#turno");
+        const selecUsuario= document.querySelector("#usuario");
         const selectPlato = document.querySelector("#plato");
         const tabla = document.querySelector("#tabla-turno");
         const tabla2 = document.querySelector("#tabla-plato");
@@ -130,9 +131,9 @@
         const exportarP = document.querySelector("#exportarp");
         const exportarT = document.querySelector("#exportarT");
 
-        function listarTurno(){
+        function listarUsuario(){
           const parametros = new URLSearchParams();
-          parametros.append("operacion", "listarTurno");
+          parametros.append("operacion", "listarUsu");
 
           fetch('../controller/reporte.controller.php',{
             method: 'POST',
@@ -142,9 +143,9 @@
           .then(datos => {
             datos.forEach(element => {
               const optiontag = document.createElement("option");
-              optiontag.value = element.idturno;
-              optiontag.text  = element.turno;
-              selectTurno.appendChild(optiontag);
+              optiontag.value = element.idusuario;
+              optiontag.text  = element.nombreusuario;
+              selecUsuario.appendChild(optiontag);
             });
           });
         }
@@ -171,7 +172,7 @@
         function obtenerVenta(){
           const parametros = new URLSearchParams();
           parametros.append("operacion","listarVenta");
-          parametros.append("turno", parseInt(selectTurno.value));
+          parametros.append("usuario", parseInt(selecUsuario.value));
 
           fetch('../controller/reporte.controller.php',{
             method: 'POST',
@@ -184,11 +185,12 @@
               const venta = `
               <tr>
                 <td>${element.idventa}</td>  
-                <td>${element.turno}</td>  
-                <td>${element.nombreusu}</td>  
-                <td>${element.numMesa}</td>  
-                <td>${element.tipo}</td>  
-                <td>${element.plato}</td>
+                <td>${element.nombreusuario}</td>  
+                <td>${element.tipopago}</td>  
+                <td>${element.comprobante}</td>  
+                <td>${element.totalpagar}</td>  
+                <td>${element.numMesa}</td>
+                <td>${element.fechaventa}</td>
               </tr>
               `;
               cuerpo.innerHTML += venta;
@@ -232,9 +234,9 @@
           });
         }
         
-        function PDFTurno(){
+        function PDFusuario(){
           const parametros = new URLSearchParams();
-          parametros.append("turno", parseInt(selectTurno.value));
+          parametros.append("usuario", parseInt(selecUsuario.value));
           window.open(`../reports/turno.report.php?${parametros}`,'_blank');
         }
         
@@ -245,13 +247,13 @@
         }
         
         //evento
-        selectTurno.addEventListener("change", obtenerVenta);
+        selecUsuario.addEventListener("change", obtenerVenta);
         selectPlato.addEventListener("change", obtenerVenta1);
-        exportarT.addEventListener("click", PDFTurno);
+        exportarT.addEventListener("click", PDFusuario);
         exportarP.addEventListener("click",PDFPlato);
 
         //este no
-        listarTurno();
+        listarUsuario();
         listarTplato();
         
       });

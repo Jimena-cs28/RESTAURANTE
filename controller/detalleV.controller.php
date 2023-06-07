@@ -6,7 +6,7 @@ if(isset($_POST['operacion'])){
   $deventas = new DetalleV();
 
   if ($_POST['operacion'] == 'listarDeVenta'){
-    $datos = $deventas->ListarDeVenta();
+    $datos = $deventas->ListarDeVenta($_POST['idventa']);
     if ($datos){
       echo json_encode($datos);
     }
@@ -20,10 +20,10 @@ if(isset($_POST['operacion'])){
   if($_POST['operacion'] == 'actualizar'){
     $datosActulizar = [
         "idventa" => $_POST['idventa'],
-        "idturno" => $_POST['idturno'],
-        "idTplato" => $_POST['idTplato'],
-        "numMesa" => $_POST['numMesa'],
-        "plato" => $_POST['plato']
+        "idcliente" => $_POST['idcliente'],
+        "tipopago" => $_POST['tipopago'],
+        "comprobante" => $_POST['comprobante'],
+        "totalpagar" => $_POST['totalpagar']
     ];
 
     $respuesta = $deventas->actualizar($datosActulizar);
@@ -38,12 +38,9 @@ if(isset($_POST['operacion'])){
   if($_POST['operacion'] == 'registrarDE'){
     $datosGuardar = [
       "idventa"         => $_POST['idventa'],
-      "idclientes"      => $_POST['idclientes'],
-      "PrecioUni"       => $_POST['PrecioUni'],
-      "cantidad"        => $_POST['cantidad'],
-      "precioTotal"     => $_POST['precioTotal'],
-      "idtipopago"         => $_POST['idtipopago'],
-      "idcomprobante"     => $_POST['idcomprobante']
+      "cantidad"      => $_POST['cantidad'],
+      "idmenu"       => $_POST['idmenu'],
+      "total"        => $_POST['total']
     ];
 
     $respuesta = $deventas->registrarDe($datosGuardar);

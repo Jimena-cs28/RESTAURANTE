@@ -9,10 +9,10 @@ class DetalleV extends Conexion{
     $this->acceso = parent::getConexion();
   }
 
-  public function ListarDeVenta(){
+  public function ListarDeVenta($idventa){
     try{
-      $consulta = $this->acceso->prepare("CALL spu_listar_deventa()");
-      $consulta->execute();
+      $consulta = $this->acceso->prepare("CALL spu_listar_deventa(?)");
+      $consulta->execute(array($idventa));
 
       $datosObtenidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
       return $datosObtenidos;
@@ -24,18 +24,18 @@ class DetalleV extends Conexion{
 
   public function actualizar($datos = []){
     $respuesta = [
-        "status" => false,
-        "message" => ""
+      "status" => false,
+      "message" => ""
     ];
     try{
-        $consulta = $this->acceso->prepare("CALL spu_venta_editar(?,?,?,?,?)");
+        $consulta = $this->acceso->prepare("CALL spu_editar_venta(?,?,?,?,?)");
         $respuesta["status"] = $consulta->execute(
             array(
                 $datos["idventa"],
-                $datos["idturno"],
-                $datos["numMesa"],
-                $datos["idTplato"],
-                $datos["plato"],
+                $datos["idcliente"],
+                $datos["tipopago"],
+                $datos["comprobante"],
+                $datos["totalpagar"]
             )
         );
     }
@@ -43,19 +43,19 @@ class DetalleV extends Conexion{
         $respuesta["message"] = "No se ah podido completar el proceso. Codigo error: " . $e->getCode();
     }
     return $respuesta;
-  }
+  } 
 
   public function eliminar($idventa = 0){
     $respuesta = [
-        "status" => false,
-        "message" => ""
+      "status" => false,
+      "message" => ""
     ];
     try{
-        $consulta = $this->acceso->prepare("CALL spueliminarventa(?)");
-        $respuesta["status"] = $consulta->execute(array($idventa));
+      $consulta = $this->acceso->prepare("CALL spueliminarventa(?)");
+      $respuesta["status"] = $consulta->execute(array($idventa));
     }
     catch(Exception $e){
-        $respuesta["message"] = "No se ah podido completar el proceso. Codigo error: " . $e->getCode();
+      $respuesta["message"] = "No se ah podido completar el proceso. Codigo error: " . $e->getCode();
     }
     return $respuesta;
   }
@@ -78,16 +78,13 @@ class DetalleV extends Conexion{
       "message" =>""
     ];
     try{
-      $consulta = $this->acceso->prepare("CALL spu_registrar_deventa(?,?,?,?,?,?,?)");
+      $consulta = $this->acceso->prepare("CALL spu_registrar_deventa(?,?,?,?)");
       $respuesta["status"] = $consulta->execute(
         array(
           $datos["idventa"],
-          $datos["idclientes"],
-          $datos["PrecioUni"],
           $datos["cantidad"],
-          $datos["precioTotal"],
-          $datos["idtipopago"],
-          $datos["idcomprobante"]
+          $datos["idmenu"],
+          $datos["total"]
         )
       );
     }

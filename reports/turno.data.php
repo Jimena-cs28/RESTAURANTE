@@ -16,22 +16,24 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th>turno</th>
       <th>usuario</th>
-      <th>mesa</th>
-      <th>menu</th>
-      <th>plato</th>
+      <th>tipo de pago</th>
+      <th>comprobante</th>
+      <th>total</th>
+      <th>Mesa</th>
+      <th>fecha</th>
     </tr>
   </thead>
   <tbody>
     <?php foreach($datos as $registro): ?>
         <tr>
           <td><?=$registro['idventa']?></td>
-          <td><?=$registro['turno']?></td>
-          <td><?=$registro['nombreusu']?></td>
+          <td><?=$registro['nombreusuario']?></td>
+          <td><?=$registro['tipopago']?></td>
+          <td><?=$registro['comprobante']?></td>
+          <td><?=$registro['totalpagar']?></td>
           <td><?=$registro['numMesa']?></td>
-          <td><?=$registro['tipo']?></td>
-          <td><?=$registro['plato']?></td>
+          <td><?=$registro['fechaventa']?></td>
         </tr>
     <?php endforeach;?>
   </tbody>

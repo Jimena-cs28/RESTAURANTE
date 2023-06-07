@@ -12,14 +12,13 @@ INSERT INTO administrador (nombres,apellidos,nombreusu,claveacceso) VALUES
 	('Adriana','Montero Alba','AdriM8','123456');
 	
 
-
 INSERT INTO tipopagos (Tipopago)VALUES
 	('Yape'),
 	('Plin'),
 	('Tarjeta Credito'),
 	('efectivo');
 
-INSERT INTO turnos (turno,horallegada,horasalida) VALUES
+INSERT INTO turnos (turno,horainicio,horafin) VALUES
 	('Tarde','11:00:00','17:30:00'),
 	('Noche','17:30:00','22:00:00');
 	
@@ -30,23 +29,36 @@ SELECT * FROM tipopagos
 
 INSERT INTO tipoPlatos (tipo) VALUES
 	('plato entrada'),
-	('plato salida'),
 	('plato principal'),
 	('bebidas');
-	
-INSERT INTO comprobante(comprobante) VALUES
-('Boleta'),
-('Factura');
+INSERT INTO platos(platos) VALUES
+-- plato entrada
+	('Causa'),
+	('Leche tigre'),
+	('Tamales'),
+	('Huane'),
+	('Papa a la hiancaina'),
+-- plato principal
+	('Carapulcra'),
+	('Ceviche'),
+	('Pollo la Olla'),
+	('Arroz con pollo'),
+-- bebodas
+	('Gaseosa inka'),
+	('Gaseosa coca cola')
+	('Cifrut'),
+	('Kr'),
+	('Agua')
 
 SELECT * FROM tipoPlatos
 
-INSERT INTO ventas (idturno,idadmi,idTplato,numMesa,plato)VALUES
+INSERT INTO ventas (idturno,idadmi,idcliente,idTplato,idTplato,numMesa,numMesa)VALUES
 	(1,1,3,'1','Carapulcra');
 	
 SELECT * FROM ventas
 SELECT * FROM detalleVenta
 
-INSERT INTO detalleVenta (idventa,idclientes,PrecioUni,cantidad,precioTotal,idtipopago,idcomprobante) VALUES
+INSERT INTO detalleVenta (idventa,cantidad, precioTotal,comprobante) VALUES
 	(1,1,'15','2','30',1,1);
 	
 	

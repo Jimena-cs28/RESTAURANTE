@@ -9,9 +9,9 @@ class Listar extends Conexion{
         $this->conexion = parent::getConexion();
     }
       
-    public function listarTurno(){
+    public function listarUsu(){
       try{
-        $consulta = $this->conexion->prepare("SELECT * FROM turnos");
+        $consulta = $this->conexion->prepare("SELECT * FROM usuarios");
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
   
@@ -19,7 +19,7 @@ class Listar extends Conexion{
         die($e->getMessage());
       }
     }
-    public function listarVenta($turno){
+    public function listarVenta1($turno){
       try{
         $consulta = $this->conexion->prepare("CALL reporte_turno(?)");
         $consulta->execute(array($turno));
@@ -39,10 +39,10 @@ class Listar extends Conexion{
       }
   }
 
-    public function listarVenta1($plato){
+    public function listarVenta($usuario){
       try{
-        $consulta = $this->conexion->prepare("CALL reporte_tPlato(?)");
-        $consulta->execute(array($plato));
+        $consulta = $this->conexion->prepare("CALL reporte_deusuario(?)");
+        $consulta->execute(array($usuario));
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
       }catch(Exception $e){
         die($e->getMessage());

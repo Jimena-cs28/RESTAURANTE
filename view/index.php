@@ -46,65 +46,30 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
     </div>
   </nav>
 
-  <div class="mt-3">
+  <div class="container mt-3">
     <div class="row">
-      <div class="col-md-6">
-        <!-- formulario -->
-        <form action="" autocomplete="off" id="formulario-Venta">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-4 mt-4" >
-                <label for="turno" class="form-label ">Turno</label>
-                <select name="" id="turno" class="form-select">
-
-                </select>
-              </div>
-              <div class="col-md-4 mt-4">
-                <label for="admi" class="form-label ">Administrador</label>
-                <select name="" id="admi" class="form-select">
-
-                </select>
-              </div>
-              <div class="col-md-4 mt-4">
-                <label for="mesa" class="form-label ">Mesa</label>
-                <input type="text" id="mesa" class="form-control">
-              </div>
-            </div>
-  
-            <div class="row">
-              <div class="col-md-4 mt-4" >
-                <label for="tipoP" class="form-label">Tipo de Plato</label>
-                <select name="" id="tipoP" class="form-select">
-
-                </select>
-              </div>
-              <div class="col-md-4 mt-4">
-                <label for="plato" class="form-label">Plato</label>  
-                <input type="text" id="plato" class="form-control">
-              </div>
-              <div class="col-md-4 mt-5">
-                <button class="btn btn-outline-info" id="registrar1">Registrar</button>
-                <button class="btn btn-outline-secondary" id="detalleVenta" data-bs-toggle="modal" data-bs-target="#modal-Dventa">Registrar venta</button>
-              </div>
-            </div>
-          </div>
-          
-        </form> 
-        <div class="col-md-10">
-          <canvas id="grafico1"></canvas>
-        </div>
+      <h1 class="text-center">Ventas</h1>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <button class="btn btn-dark" type="button">Registrar Venta</button>
       </div>
-      <div class="container col-md-6 mb-5 text-center">
-        <table id="tabla-venta"class="table table-striped table-bordered table-sm">
+    </div>
+    <div class="row">
+      <div class="col-md-12 mb-5 mt-3 text-center">
+        <table id="tabla-venta"class="table table-striped table-info table-bordered table-sm">
           <thead>
             <tr>
               <th>#</th>
-              <th>Turno</th>
-              <th>Admi</th>
+              <th>usuario</th>
+              <th>turno</th>
               <th>Mesa</th>
-              <th>Menu</th>
-              <th>Plato</th>
-              <th>Operacion</th>
+              <th>tipo de pago</th>
+              <th>comprobante</th>
+              <th>fecha de venta</th>
+              <th>total</th>
+              <th>Estado</th>
+              <th>editar</th>
             </tr>
           </thead>
           <tbody>
@@ -113,137 +78,142 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
         </table>
       </div>
     </div>
-    <button class="btn btn-outline-dark" id="actualizarG2">Actualizar Graficos</button>
-    <button class="btn btn-outline-dark" id="exportar">Generar Reporte de Ventas</button>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-10">
         <canvas id="grafico2"></canvas>
       </div>
     </div>
   </div>
   <div class="mt-3">
     <div class="row">
-      <div class="col-md-5">
+      <div class="col-md-6">
         <canvas id="grafico1"></canvas>
       </div>
       
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-    
-
-  <!-- modal acualizar -->
-  <div class="modal fade" id="modal-actualizar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <form action="" autocomplete="off" id="formulario-Venta">
-            <div class="card">
-            <div class="card-header text-black">
-              Actualize su venta aqui
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-6 mt-4" >
-                  <label for="turno" class="form-label ">Turno</label>
-                  <select name="" id="md-turno" class="form-select">
-                  </select>
-                </div>
-                <div class="col-md-6 mt-4">
-                  <label for="mesa" class="form-label ">Mesa</label>
-                  <input type="text" id="md-mesa" class="form-control">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 mt-4" >
-                  <label for="tipoP" class="form-label">Tipo de Plato</label>
-                  <select name="" class="form-select" id="md-tipoP">
-
-                  </select>
-                </div>
-                <div class="col-md-6 mt-4">
-                  <label for="plato" class="form-label">Plato</label>  
-                  <input type="text" class="form-control" id="md-plato">
-                </div>
-              </div>
   
-              <div class="row">
-                <div class="md-3 mt-4">
-                  <button class="btn btn-outline-info" id="actualizar">Actualizar</button>
-                  <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Close</button>
-                </div>
-                <div class="col-md-6">
-                </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://kit.fontawesome.com/2652b6cfc8.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+   
+  <!-- Modal Body -->
+  <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+  <div class="modal fade" id="modal-actualizar-venta" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">Terminar Venta: </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <form action="" autocomplete="off" id="formulario-Venta">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="admi" class="form-label ">Mesa</label>
+                <input type="text" name="" id="md-mesa" disabled>
               </div>
             </div>
-          </div>
-          </form> 
-        </div>
-    </div>
-  </div>
-
-  <!-- modal RegistrarVenta -->
-  <div class="modal fade" id="modal-Dventa" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <form action="" autocomplete="off" id="formulario-Dventa" class="ml-3">
-            <div class="card">
-              <div class="card-header bg-secondary text-black">
-                  Registro de Detalle de Venta
+            <div class="row">
+              <div class="col-md-12 mt-4" >
+                <label for="tipoP" class="form-label">Cliente</label>
+                <select name="" id="cliente" class="form-select">
+                </select>
+              </div>             
+            </div>
+            <div class="row">
+              <div class="col-md-6 mt-4">
+                <label for="tipo" class="form-label ">Tipo De Pago</label>
+                <select name="tipo" id="md-tipo"  class="form-select">
+                  <option value="">Seleccione</option>
+                  <option value="Tarjeta de credito">Tarjeta de credito</option>
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="Yape">Yape</option>
+                  <option value="Plin">Plin</option>
+                </select>
               </div>
-              <div class="card-body">
-
-              <div class="row">
-                <div class="col-md-3 mt-4" >
-                  <label for="venta" class="form-label ">Venta</label>
-                  <input type="number" class="form-control" id="venta">
-                </div>
-                <div class="col-md-3 mt-4">
-                  <label for="precioT" class="form-label "> Precio </label>
-                  <input type="number" class="form-control" step="0.001" id="precio" oninput="calcular()">
-                </div>
-                <div class="col-md-3 mt-4" >
-                  <label for="cantidad" class="form-label ">Cantidad</label>
-                  <input type="number" class="form-control" step="0.001"  id="cantidad" oninput="calcular()">
-                </div>
-                <div class="col-md-3 mt-4">
-                  <label for="precioT" class="form-label "> Total</label>
-                  <input type="number" class="form-control" step="0.001"  id="total">
-                </div>
+              <div class="col-md-6 mt-4">
+                <label for="admi" class="form-label ">comprobante</label>
+                <select name="" id="md-comprobante" class="form-select">
+                  <option value="">Seleccione</option>
+                  <option value="Boleta">Boleta</option>
+                  <option value="Factura">Factura</option>
+                </select>
               </div>
-              <div class="row mt-4">
-                  <div class="col-md-12 " >
-                    <label for="plato" class="form-label">Cliente</label>  
-                      <select name="" id="cliente" class="form-select">
-                      </select>
-                  </div>
-              </div>
-              <div class="row mt-5">
-                <div class="col-md-6 ">
-                  <label for="tipo" class="form-label ">Tipo De Pago</label>
-                  <select name="tipo" id="tipo"  class="form-select">
+            </div>
+            <table class="table table-info mt-4" id="resumenventa">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Cantidad</th>
+                  <th>Menú</th>
+                  <th>total</th>
+                </tr>
+              </thead>
+              <tbody>
 
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="compro" class="form-label ">Comprobante</label>
-                  <select name="" id="comprobante" class="form-select">
+              </tbody>
+            </table>
 
-                  </select>
-                </div>
+            <div class="row">
+              <div class="col-md-6 mt-4">
+                <label for="mesa" class="form-label ">Total</label>
+                <input type="text" id="md-total"class="form-control" >
               </div>
-
-              <div class="row">
-                <div class="col-md-12 mt-4">
-                  <button class="btn btn-outline-info" id="registrarDeV">Registrar</button>
-                </div>
-              </div>
+            </div>
+            <div class="row">
+            <button type="button" class="btn btn-primary" id="t-venta">Guardar</button>
             </div>
           </div>
         </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+         
+        </div>
       </div>
     </div>
   </div>
+  
+  <div class="modal fade" id="modal-registrar-venta" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">Registrar Venta: </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <form action="" autocomplete="off" id="formulario-Venta">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="r-mesa" class="form-label ">Mesa</label>
+                <select name=""class="form-control" id="r-mesa">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+            <button type="button" class="btn btn-primary" id="r-venta">Guardar</button>
+            </div>
+          </div>
+        </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script>
     function calcular(){
@@ -258,7 +228,8 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
 
     document.addEventListener("DOMContentLoaded", () =>{
       let idventa = '';
-      const modal = new bootstrap.Modal(document.querySelector("#modal-actualizar"));
+      const modal = new bootstrap.Modal(document.querySelector("#modal-actualizar-venta"));
+      const modalRegistrarVenta = new bootstrap.Modal(document.querySelector("#modal-registrar-venta"));
       const btA = document.querySelector("#actualizar");
       const btRegistrarD = document.querySelector("#registrarDeV");
       const selecttipo = document.querySelector("#tipo");
@@ -270,15 +241,18 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
       const mdTplato  = document.querySelector("#md-tipoP");
       //select
       const selectPlatp = document.querySelector("#tipoP");
+      const table2 = document.querySelector("#resumenventa");
+      const cuerpoD = table2.querySelector("tbody");
       const table = document.querySelector("#tabla-venta");
       const cuerpo = table.querySelector("tbody");
       const lienzo1 = document.querySelector("#grafico1");
       const lienzo2 = document.querySelector("#grafico2");
       const btregistrar = document.querySelector("#registrar1");
-      const selecturno = document.querySelector("#turno");
-      const selectadmi = document.querySelector("#admi");
+      const selectmesa = document.querySelector("#md-mesa");
       const plato = document.querySelector("#plato");
       const btAcualizar2 = document.querySelector("#actualizarG2");
+      const t_venta = document.querySelector("#t-venta");
+      const r_venta = document.querySelector("#r-venta");
 
       // graficos
       const graficoBarras = new Chart(lienzo1, {
@@ -300,7 +274,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
         let datos = [];
 
         coleccion.forEach(element => {
-          etiquetas.push(element.tipo);
+          etiquetas.push(element.categoria);
           datos.push(element.Total);
 
           const tagL = document.createElement("li");
@@ -401,23 +375,25 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
       cuerpo.addEventListener("click", (event) => {
         if(event.target.classList[0] === 'editar'){
           idventa = parseInt(event.target.dataset.idventa);
-
+          
           const parametros = new URLSearchParams();
           parametros.append("operacion","obtener");
           parametros.append("idventa", idventa);
 
-          fetch("../controller/detalleV.controller.php", {
+          fetch("../controller/detalleV.controller.php",{
             method: 'POST',
             body: parametros
           })
-          .then(response => response.json())
-          .then(datos => {
-            document.querySelector("#md-turno").value = datos.idturno;
-            document.querySelector("#md-mesa").value = datos.numMesa;
-            document.querySelector("#md-tipoP").value = datos.idTplato;
-            document.querySelector("#md-plato").value = datos.plato;
-            modal.toggle();
-          });
+            .then(response => response.json())
+            .then(datos => {
+              selectmesa.value = datos.numMesa;
+              listardeVentas();
+              t_venta.addEventListener("click", updates);
+              modal.toggle();
+            })
+
+            
+          
         }
 
       });
@@ -428,10 +404,10 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
           parametros.append("operacion","actualizar");
 
           parametros.append("idventa", idventa);
-          parametros.append("idturno", document.querySelector("#md-turno").value);
-          parametros.append("idTplato", document.querySelector("#md-tipoP").value);
-          parametros.append("numMesa", document.querySelector("#md-mesa").value);
-          parametros.append("plato", document.querySelector("#md-plato").value);
+          parametros.append("idcliente", document.querySelector("#cliente").value);
+          parametros.append("tipopago", document.querySelector("#md-tipo").value);
+          parametros.append("comprobante", document.querySelector("#md-comprobante").value);
+          parametros.append("totalpagar", document.querySelector("#md-total").value);
 
           fetch("../controller/detalleV.controller.php", {
             method: 'POST',
@@ -441,7 +417,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
           .then(datos => {
             if(datos.status){
               listarVentas();
-              modal.toggle();
+              alert("Venta terminada")
             }else{
               alert(datos.message);
             }
@@ -505,106 +481,6 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
         }
       }
 
-      function listarTurno (){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarturno");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          selecturno.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let opcion = `
-              <option value='${element.idturno}'>${element.turno}</option> 
-            `;
-            selecturno.innerHTML += opcion;
-          });
-        });
-      }
-      
-      function listarMdTurno (){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarturno");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          mdturno.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let opcion = `
-              <option value='${element.idturno}'>${element.turno}</option> 
-            `;
-            mdturno.innerHTML += opcion;
-          });
-        });
-      }
-      
-      function listarMdPlato(){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarPlato");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          mdTplato.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let platos = `
-              <option value='${element.idTplato}'>${element.tipo}</option> 
-            `;
-            mdTplato.innerHTML += platos;
-          });
-        });
-      }
-
-      function listarAdmi (){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarAdmi");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          selectadmi.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let admi = `
-              <option value='${element.idadmi}'>${element.nombreusu}</option> 
-            `;
-            selectadmi.innerHTML += admi;
-          });
-        });
-      }
-      
-      function listarPlato (){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarPlato");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          selectPlatp.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let platos = `
-              <option value='${element.idTplato}'>${element.tipo}</option> 
-            `;
-            selectPlatp.innerHTML += platos;
-          });
-        });
-      }
-
       function listarCliente (){
         const parametros = new URLSearchParams();
         parametros.append("operacion","listarCliente");
@@ -618,72 +494,13 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
           selectcliente.innerHTML = "<option value=''>Seleccione</option>";
           datos.forEach(element => {
             let opcion3 = `
-              <option value='${element.idclientes}'>${element.nombres}${element.apellidos}</option> 
+              <option value='${element.idpersona}'>${element.nombres}  ${element.apellidos}</option> 
             `;
             selectcliente.innerHTML += opcion3;
           });
         });
       }
 
-      function listarclientemd(){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarCliente");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          selectcliente.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let opcion3 = `
-              <option value='${element.idclientes}'>${element.nombres}${element.apellidos}</option> 
-            `;
-            selectcliente.innerHTML += opcion3;
-          });
-        });
-      }
-
-      function listarPago(){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarPago");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          selecttipo.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let pago = `
-              <option value='${element.idtipopago}'>${element.Tipopago}</option> 
-            `;
-            selecttipo.innerHTML += pago;
-          });
-        });
-      }
-
-      function listarCompro (){
-        const parametros = new URLSearchParams();
-        parametros.append("operacion","listarCompro");
-
-        fetch("../controller/Ventas.controller.php", {
-          method: 'POST',
-          body: parametros
-        })
-        .then(response => response.json())
-        .then(datos => {
-          selectcompro.innerHTML = "<option value=''>Seleccione</option>";
-          datos.forEach(element => {
-            let compro = `
-              <option value='${element.idcomprobante}'>${element.comprobante}</option> 
-            `;
-            selectcompro.innerHTML += compro;
-          });
-        });
-      }
       
       function listarVentas(){
         const parametros = new URLSearchParams();
@@ -700,14 +517,17 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
             const Vopcion1 = `
               <tr>
                 <td>${element.idventa}</td>
+                <td>${element.nombreusuario}</td>
                 <td>${element.turno}</td>
-                <td>${element.nombreusu}</td>
                 <td>${element.numMesa}</td>
-                <td>${element.tipo}</td>
-                <td>${element.plato}</td>
+                <td>${element.tipopago}</td>
+                <td>${element.comprobante}</td>
+                <td>${element.fechaventa}</td>
+                <td>${element.totalpagar}</td>
+                <td>${element.estadomesa}</td>
                 <td>
                   <a href='#' class='eliminar' data-idventa='${element.idventa}'>Quitar</a>
-                  <a href='#' class='editar' data-idventa='${element.idventa}'>Editar</a>  
+                  <a href='#' type='button' class='editar' data-idventa='${element.idventa}'>editar</a>  
                 </td>
               </tr>`
               ;
@@ -715,31 +535,50 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']['status']){
           });
         });
       }
-      //reportes
-      function PDF(){
+
+      function listardeVentas(){
         const parametros = new URLSearchParams();
-        parametros.append("operacion", "listarVenta");
-        window.open(`../reports/ventas.report.php?${parametros}`,'_blank');
+          parametros.append("operacion", "listarDeVenta");
+          parametros.append("idventa", idventa);
+        fetch("../controller/detalleV.controller.php", {
+          method : 'POST',
+          body:parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          cuerpoD.innerHTML = ``;
+          datos.forEach(element => {
+            const Vopcion1 = `
+              <tr>
+                <td>${element.iddetalleventa}</td>
+                <td>${element.cantidad}</td>
+                <td>${element.menu}</td>
+                <td>${element.total}</td>
+              </tr>`
+              ;
+              cuerpoD.innerHTML +=Vopcion1;
+          });
+        });
       }
 
+      //reportes
+      // function PDF(){
+      // const parametros = new URLSearchParams();
+      // parametros.append("operacion", "listarVenta");
+      // window.open(`../reports/ventas.report.php?${parametros}`,'_blank');
+      // }
+
       //eventos
-      btA.addEventListener("click", updates);
-      btAcualizar2.addEventListener("click", loadData1);
-      btAcualizar2.addEventListener("click", loadData);
-      btregistrar.addEventListener("click", registrarV);
-      btRegistrarD.addEventListener("click", registrarDetalle);
+      // btA.addEventListener("click", updates);
+      // btAcualizar2.addEventListener("click", loadData);
+      // btregistrar.addEventListener("click", registrarV);
+      // btRegistrarD.addEventListener("click", registrarDetalle);
 
-      Exportar.addEventListener("click", PDF);
+      // Exportar.addEventListener("click", PDF);
 
-      listarMdTurno();
-      listarMdPlato();
       listarVentas();
-      listarPlato();
+      listardeVentas();
       listarCliente();
-      listarCompro();
-      listarPago();
-      listarAdmi();
-      listarTurno();
     });
   </script>
   

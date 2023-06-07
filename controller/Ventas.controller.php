@@ -12,12 +12,6 @@ if(isset($_POST['operacion'])){
     }
   }
 
-  if($_POST['operacion'] == 'listarturno'){
-    $datos = $ventas->listarTurno();
-    if($datos){
-      echo json_encode($datos);
-    }
-  }
 
   if($_POST['operacion'] == 'listarCliente'){
     $datos = $ventas->listarCliente();
@@ -25,45 +19,19 @@ if(isset($_POST['operacion'])){
       echo json_encode($datos);
     }
   }
-
-  if($_POST['operacion'] == 'listarPago'){
-    $datos = $ventas->listarPago();
-    if($datos){
-      echo json_encode($datos);
-    }
-  }
-
-  if($_POST['operacion'] == 'listarAdmi'){
-    $datos = $ventas->listarAdmi();
-    if($datos){
-      echo json_encode($datos);
-    }
-  }
-
-  if($_POST['operacion'] == 'listarPlato'){
-    $datos = $ventas->listarPlato();
-    if($datos){
-      echo json_encode($datos);
-    }
-  }
-
-  if($_POST['operacion'] == 'listarCompro'){
-    $datos = $ventas->listarCompro();
-    if($datos){
-      echo json_encode($datos);
-    }
-  }
   
   if($_POST['operacion'] == 'registrarV'){
     $datosGuardar = [
-      "idturno"     => $_POST['idturno'],
-      "idadmi"      => $_POST['idadmi'],
-      "idTplato"    => $_POST['idTplato'],
+      "idusuario"     => $_POST['idusuario'],
       "numMesa"      => $_POST['numMesa'],
-      "plato"       => $_POST['plato']
+      "idcliente"    => $_POST['idcliente'],
+      "tipopago"      => $_POST['tipopago'],
+      "comprobante"       => $_POST['comprobante'],
+      "totalpagar"       => $_POST['totalpagar']
     ];
 
     $respuesta = $ventas->registrarV($datosGuardar);
     echo json_encode($respuesta);
   }
+
 }

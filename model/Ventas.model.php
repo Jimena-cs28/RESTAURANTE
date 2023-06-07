@@ -9,7 +9,7 @@ class Ventas extends Conexion{
     $this->acceso = parent::getConexion();
   }
 
-  
+  //listo
   public function listarventas(){
     try{
       $consulta = $this->acceso->prepare("CALL spu_listar_venta()");
@@ -22,10 +22,10 @@ class Ventas extends Conexion{
       die($e->getMessage());
     }
   }
-  
-  public function listarTurno(){
+
+  public function listarmesa(){
     try{
-      $consulta = $this->acceso->prepare("SELECT * FROM turnos");
+      $consulta = $this->acceso->prepare("SELECT numMesa FROM ventas");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -37,7 +37,7 @@ class Ventas extends Conexion{
 
   public function listarCliente(){
     try{
-      $consulta = $this->acceso->prepare("SELECT * FROM clientes");
+      $consulta = $this->acceso->prepare("SELECT * FROM personas");
       $consulta->execute();
 
       return $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -47,53 +47,6 @@ class Ventas extends Conexion{
     }
   }
 
-  public function listarPago(){
-    try{
-      $consulta = $this->acceso->prepare("SELECT * FROM tipopagos");
-      $consulta->execute();
-
-      return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(Exception $e){
-      die($e->getMessage());
-    }
-  }
-
-  public function listarAdmi(){
-    try{
-      $consulta = $this->acceso->prepare("SELECT * FROM administrador");
-      $consulta->execute();
-
-      return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(Exception $e){
-      die($e->getMessage());
-    }
-  }
-
-  public function listarPlato(){
-    try{
-      $consulta = $this->acceso->prepare("SELECT * FROM tipoPlatos");
-      $consulta->execute();
-
-      return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(Exception $e){
-      die($e->getMessage());
-    }
-  }
-
-  public function listarCompro(){
-    try{
-      $consulta = $this->acceso->prepare("SELECT * FROM comprobante");
-      $consulta->execute();
-
-      return $consulta->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(Exception $e){
-      die($e->getMessage());
-    }
-  }
 
   public function registrarV($datos = []){
 
@@ -102,14 +55,15 @@ class Ventas extends Conexion{
       "message" =>""
     ];
     try{
-      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?)");
+      $consulta = $this->acceso->prepare("CALL spu_registrar_venta(?,?,?,?,?,?)");
       $respuesta["status"] = $consulta->execute(
         array(
-          $datos["idturno"],
-          $datos["idadmi"],
+          $datos["idusuario"],
           $datos["numMesa"],
-          $datos["idTplato"],
-          $datos["plato"]
+          $datos["idcliente"],
+          $datos["tipopago"],
+          $datos["comprobante"],
+          $datos["totalpagar"]
         )
       );
     }
@@ -118,4 +72,6 @@ class Ventas extends Conexion{
     }
     return $respuesta;
   }
+
+  
 }

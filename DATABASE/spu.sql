@@ -23,6 +23,7 @@ SELECT * FROM administrador
 
 CALL spu_login('AdriM8');
 
+-- listo
 SELECT * FROM tipopagos	
 SELECT * FROM ventas;
 SELECT * FROM personas;
@@ -78,17 +79,7 @@ END$$
 
 CALL spueliminarventa();
 
--- no ejeute
-DELIMITER $$
-CREATE PROCEDURE spu_buscar_venta
-(
-	IN _idventa INT
-)
-BEGIN
-	SELECT * FROM ventas WHERE idventa = _idventa;
-END $$
 
-CALL spu_buscar_venta(2);
 SELECT * FROM tipoplatos
 
 DELIMITER $$
