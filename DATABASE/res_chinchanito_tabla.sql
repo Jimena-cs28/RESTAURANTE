@@ -64,7 +64,7 @@ CREATE PROCEDURE spu_login
 	IN _usuario VARCHAR(30)
 )
 BEGIN
-	SELECT usuarios.0, usuarios.nombreusuario, claveacceso,
+	SELECT usuarios.idusuario, usuarios.nombreusuario, claveacceso,
 		personas.nombres, personas.apellidos	
 	FROM usuarios
 	INNER JOIN personas ON personas.idpersona = usuarios.idpersona
@@ -103,6 +103,7 @@ CREATE TABLE MENUS
 	CONSTRAINT fk_idcate FOREIGN KEY (idcategoria) REFERENCES CATEGORIAS (idcategoria),
 	CONSTRAINT uk_menu_m UNIQUE(menu)
 )ENGINE=INNODB;
+SELECT * FROM menus
 
 INSERT INTO MENUS (idcategoria,menu,precio,cantidad) VALUES
 (1,'Causa','8','100'), -- 1 
@@ -110,12 +111,12 @@ INSERT INTO MENUS (idcategoria,menu,precio,cantidad) VALUES
 (1,'Ensalada de Lentejas','20','100'),
 (1,'Ensalada de Beterraga','20','100'),
 (2,'Carapulcra','15','100'),
-(2,'Ceviche','15','100'), 6
+(2,'Ceviche','15','100'), -- 6
 (2,'Arroz con Pollo','20','100'), -- 7
 (2,'Chaufa de chancho','17','100'),
 (2,'Chaufa de pollo','26','100'),
 (3,'Pollo a la canasta','30','100'),
-(3,'Anticucho','10','100'), 11
+(3,'Anticucho','10','100'), -- 11
 (3,'Caldo de gallina','15','100'), -- 12
 (3,'Pollo a la parrilla','25','100'),
 (4,'Agua cielo','2','100'),
@@ -125,11 +126,7 @@ INSERT INTO MENUS (idcategoria,menu,precio,cantidad) VALUES
 (4,'Kr','2','100'),
 (4,'Agua Mateo','3','100');
 
-SELECT menus.idmenu, categorias.categoria, menus.menu, menus.precio
-FROM menus
-INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
-WHERE categorias.idcategoria = 4
-ORDER BY menus.idmenu
+
 
 CREATE TABLE VENTAS
 (
@@ -146,9 +143,6 @@ CREATE TABLE VENTAS
 	CONSTRAINT fk_idusu_v FOREIGN KEY (idusuario) REFERENCES usuarios(idusuario)
 
 )ENGINE=INNODB;
-
-SELECT
-FROM ventas
 
 
 INSERT INTO ventas (idusuario,numMesa)VALUES
@@ -177,6 +171,7 @@ INSERT INTO detalleventas(idventa,idmenu,cantidad,total)VALUES
 			(2,7,1,'20'),
 			(2,12,1,'15');
 
+-- PROCEDIMIENTOS
 -- VENTAS
 -- listar venta
 DELIMITER $$
@@ -223,9 +218,36 @@ BEGIN
 END$$
 
 CALL spu_obtener_venta(2);
+
 SELECT * FROM ventas
 
+DELIMITER $$
+CREATE PROCEDURE spu_listar_menu
+(
+	IN _idcate INT
+)
+BEGIN
+	SELECT menus.idmenu,categorias.categoria, menus.menu, menus.precio
+	FROM menus
+	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
+	WHERE menus.idcategoria = 1;
+	
+END$$
 
+DELIMITER $$
+CREATE PROCEDURE spu_listar_me
+(
+	IN _idmenu INT
+)
+BEGIN
+	SELECT menus.idmenu,categorias.categoria, menus.menu, menus.precio
+	FROM menus
+	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
+	WHERE menus.idmenu = _idmenu;
+
+END$$
+
+CALL spu_listar_me(4);
 -- listar Detalle 
 DELIMITER $$
 CREATE PROCEDURE spu_listar_deventa(IN _idventa INT)
@@ -237,24 +259,13 @@ BEGIN
 	INNER JOIN menus ON menus.idmenu = detalleventas.idmenu
 	WHERE ventas.idventa = _idventa;
 END $$
+
 SELECT * FROM detalleventas
+
 CALL spu_listar_deventa(1);
 
 
 SELECT * FROM detalleventas
--- lista General
-CREATE PROCEDURE spu_listar_venta()
-BEGIN
-	SELECT detalleventas.iddetalleventa, usuarios.nombreusuario, personas.nombres, personas.apellidos,
-	ventas.tipopago, ventas.comprobante, ventas.fechaventa, detalleventas.cantidad,
-	menus.menu, detalleventas.total
-	FROM detalleventas
-	INNER JOIN ventas  ON ventas.idventa = detalleventas.idventa
-	INNER JOIN menus ON menus.idmenu = detalleventas.idmenu
-	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
-	INNER JOIN usuarios ON usuarios.idusuario = ventas.idusuario
-	INNER JOIN personas ON personas.idpersona = ventas.idcliente
-END $$
 
 -- registrar detalle venta
 DELIMITER $$
@@ -268,7 +279,8 @@ CREATE PROCEDURE spu_registrar_detalleventa
 BEGIN
 	INSERT INTO detalleventas(idventa,cantidad,idmenu,total) VALUES
 				(_idventa, _cantidad,_idmenu,_total);
-END$$
+END$$ 
+
 
 -- registrar venta
 DELIMITER $$
@@ -305,6 +317,9 @@ BEGIN
 END $$
 
 CALL reporte_deusuario(1);
+
+-- reporte 2
+
 
 -- grafico
 DELIMITER $$

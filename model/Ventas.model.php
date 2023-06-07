@@ -69,5 +69,42 @@ class Ventas extends Conexion{
     return $respuesta;
   }
 
+  public function listarCate(){
+    try{
+      $consulta = $this->acceso->prepare("SELECT * FROM categorias");
+      $consulta->execute();
+
+      return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+    
+  }
+  
+  public function listarMenu($idcat){
+    try{
+      $consulta = $this->acceso->prepare("CALL spu_listar_menu(?)");
+      $consulta->execute(array($idcat));
+
+      return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
+
+  public function datoMenu($idmenu){
+    try{
+      $consulta = $this->acceso->prepare("CALL spu_listar_me(?)");
+      $consulta->execute(array($idmenu));
+
+      return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
+
   
 }

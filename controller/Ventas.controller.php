@@ -12,14 +12,33 @@ if(isset($_POST['operacion'])){
     }
   }
 
-
   if($_POST['operacion'] == 'listarCliente'){
     $datos = $ventas->listarCliente();
     if($datos){
       echo json_encode($datos);
     }
   }
-  
+
+  if($_POST['operacion'] == 'listarCate'){
+    $datos = $ventas->listarCate();
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+
+  if($_POST['operacion'] == 'listarMenu'){
+    $datos = $ventas->listarMenu($_POST['idcat']);
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
+
+  if($_POST['operacion'] == 'datosmenu'){
+    $datos = $ventas->datoMenu($_POST['idmenu']);
+    if($datos){
+      echo json_encode($datos);
+    }
+  }
   if($_POST['operacion'] == 'registrarV'){
     $datosGuardar = [
       "idusuario"     => $_POST['idusuario'],

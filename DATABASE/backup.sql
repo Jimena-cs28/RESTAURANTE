@@ -52,7 +52,7 @@ CREATE TABLE `detalleventas` (
   KEY `fk_venta_d` (`idventa`),
   CONSTRAINT `fk_idmenu_d` FOREIGN KEY (`idmenu`) REFERENCES `menus` (`idmenu`),
   CONSTRAINT `fk_venta_d` FOREIGN KEY (`idventa`) REFERENCES `ventas` (`idventa`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `detalleventas` */
 
@@ -62,7 +62,10 @@ insert  into `detalleventas`(`iddetalleventa`,`idventa`,`idmenu`,`cantidad`,`est
 (3,1,6,2,'1',30.00),
 (4,2,2,1,'1',10.00),
 (5,2,7,1,'1',20.00),
-(6,2,12,1,'1',15.00);
+(6,2,12,1,'1',15.00),
+(7,3,2,2,'1',20.00),
+(8,3,3,3,'1',60.00),
+(9,3,2,3,'1',30.00);
 
 /*Table structure for table `menus` */
 
@@ -195,13 +198,16 @@ CREATE TABLE `ventas` (
   KEY `fk_idusu_v` (`idusuario`),
   CONSTRAINT `fk_idcliente` FOREIGN KEY (`idcliente`) REFERENCES `personas` (`idpersona`),
   CONSTRAINT `fk_idusu_v` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `ventas` */
 
 insert  into `ventas`(`idventa`,`idusuario`,`numMesa`,`idcliente`,`tipopago`,`comprobante`,`fechaventa`,`totalpagar`,`estadomesa`) values 
-(1,1,'1',NULL,NULL,NULL,'2023-06-05',NULL,'O'),
-(2,1,'2',6,'Efectivo','Boleta','2023-06-05',45.00,'D');
+(1,1,'1',4,'Plin','Factura','2023-06-07',72.00,'D'),
+(2,1,'2',5,'Efectivo','Boleta','2023-06-07',45.00,'D'),
+(3,2,'5',4,'Yape','Factura','2023-06-07',110.00,'D'),
+(4,2,'6',NULL,NULL,NULL,'2023-06-07',NULL,'O'),
+(5,2,'3',NULL,NULL,NULL,'2023-06-07',NULL,'O');
 
 /* Procedure structure for procedure `reporte_deusuario` */
 
@@ -236,7 +242,7 @@ DELIMITER $$
 	IN _totalpagar DECIMAL(7,2)
 )
 BEGIN
-	if _idcliente = '' then set _idcliente = 'Cliente generico'; end if;
+	IF _idcliente = '' THEN SET _idcliente = 'Cliente generico'; END IF;
 	UPDATE ventas SET
 	idcliente = _idcliente,
 	tipopago = _tipopago,
@@ -270,14 +276,50 @@ DELIMITER ;
 
 DELIMITER $$
 
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_deventa`(in _idventa int)
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_deventa`(IN _idventa INT)
 BEGIN
 	SELECT detalleventas.iddetalleventa,detalleventas.cantidad,
 		 menus.menu,detalleventas.total
 	FROM detalleventas
 	INNER JOIN ventas  ON ventas.idventa = detalleventas.idventa
 	INNER JOIN menus ON menus.idmenu = detalleventas.idmenu
-	where ventas.idventa = _idventa;
+	WHERE ventas.idventa = _idventa;
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `spu_listar_me` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `spu_listar_me` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_me`(
+	IN _idmenu INT
+)
+BEGIN
+	SELECT menus.idmenu,categorias.categoria, menus.menu, menus.precio
+	FROM menus
+	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
+	WHERE menus.idmenu = _idmenu;
+
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `spu_listar_menu` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `spu_listar_menu` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_menu`(
+	IN _idcate INT
+)
+BEGIN
+	SELECT menus.idmenu,categorias.categoria, menus.menu, menus.precio
+	FROM menus
+	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
+	WHERE menus.idcategoria = 1;
+	
 END */$$
 DELIMITER ;
 
@@ -288,7 +330,7 @@ DELIMITER ;
 DELIMITER $$
 
 /*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_venta`()
-begin
+BEGIN
 	SELECT idventa, 
 	usuarios.nombreusuario, 
 	turnos.turno,
@@ -296,9 +338,9 @@ begin
 	fechaventa, totalpagar, estadomesa
 	FROM ventas
 	INNER JOIN usuarios ON usuarios.idusuario = ventas.idusuario
-	inner join turnos on turnos.idturno = usuarios.idturno
-	order by idventa desc;
-end */$$
+	INNER JOIN turnos ON turnos.idturno = usuarios.idturno
+	ORDER BY idventa DESC;
+END */$$
 DELIMITER ;
 
 /* Procedure structure for procedure `spu_login` */
@@ -308,15 +350,15 @@ DELIMITER ;
 DELIMITER $$
 
 /*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_login`( 
-	in _usuario varchar(30)
+	IN _usuario VARCHAR(30)
 )
-begin
+BEGIN
 	SELECT usuarios.idusuario, usuarios.nombreusuario, claveacceso,
 		personas.nombres, personas.apellidos	
 	FROM usuarios
 	INNER JOIN personas ON personas.idpersona = usuarios.idpersona
-	where nombreusuario = _usuario;
-end */$$
+	WHERE nombreusuario = _usuario;
+END */$$
 DELIMITER ;
 
 /* Procedure structure for procedure `spu_obtener_venta` */
@@ -342,12 +384,28 @@ DELIMITER $$
 /*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_registrar_detalleventa`(
 	IN _idventa 	INT,
 	IN _cantidad 	SMALLINT,
-	IN _idmenu	int,
-	IN _total	decimal(5,2)	
+	IN _idmenu	INT,
+	IN _total	DECIMAL(5,2)	
 )
 BEGIN
 	INSERT INTO detalleventas(idventa,cantidad,idmenu,total) VALUES
 				(_idventa, _cantidad,_idmenu,_total);
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `spu_registrar_venta` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `spu_registrar_venta` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_registrar_venta`(
+	IN _idusu 	INT,
+	IN _mesa 	SMALLINT
+)
+BEGIN	
+	INSERT INTO ventas(idusuario,numMesa) VALUES
+			(_idusu, _mesa);
 END */$$
 DELIMITER ;
 

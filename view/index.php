@@ -216,13 +216,79 @@ $datoID = json_encode($_SESSION['login']);
     </div>
   </div>
 
+  <!-- registrar de venta -->
+  <div class="modal fade" id="modal-registrar-deventa" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">Registrar Detalle venta: </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <form action="" autocomplete="off" id="formulario-Venta-detalle">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="d-mesa" class="form-label ">Mesa</label>
+                <input type="text" name="" id="d-mesa" disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="d-categoria" class="form-label">Categoria</label>
+                <select name="" id="d-catego" class="form-select">
+                  
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="d-mesa" class="form-label">Menu</label>
+                <select name="d-menu"class="form-select" id="d-menu">
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="d-preciouni" class="form-label">Precio unitario</label>
+                <input type="text" id="d-preciouni" class="form-control" disabled>
+              </div>
+              <div class="col-md-6">
+                <label for="d-cantidad" class="form-label">Cantidad</label>
+                <input type="text" id="d-cantidad" class="form-control">
+              </div>              
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="d-total" class="form-label">total</label>
+                <input type="number" id="d-total" class="form-control">
+              </div>
+            </div>
+            <div class="row">
+            <button type="button" class="btn btn-primary mt-3" id="d-venta">Guardar</button>
+            </div>
+          </div>
+        </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
 
     document.addEventListener("DOMContentLoaded", () =>{
       let idventa = '';
       const modal = new bootstrap.Modal(document.querySelector("#modal-actualizar-venta"));
+      const modal2 = new bootstrap.Modal(document.querySelector("#modal-registrar-deventa"));
+
       const selectcliente = document.querySelector("#cliente");
+      const selectCategor = document.querySelector("#d-catego");
+      const selectMenu = document.querySelector("#d-menu");
+      const precio = document.querySelector("#d-preciouni");
+      const cantidad = document.querySelector("#d-cantidad");
+      const total = document.querySelector("#d-total");
 
       const table2 = document.querySelector("#resumenventa");
       const cuerpoD = table2.querySelector("tbody");
@@ -230,9 +296,10 @@ $datoID = json_encode($_SESSION['login']);
       const cuerpo = table.querySelector("tbody");
 
       const selectmesa = document.querySelector("#md-mesa");
+      const d_mesa = document.querySelector("#d-mesa");
       const t_venta = document.querySelector("#t-venta");
       const r_venta = document.querySelector("#r-venta");
-
+      const d_venta = document.querySelector("#d-venta");
 
 
       cuerpo.addEventListener("click", (event) => {
@@ -257,6 +324,27 @@ $datoID = json_encode($_SESSION['login']);
             })           
         }
       });
+
+      cuerpo.addEventListener("click", (event) => {
+        if(event.target.classList[0] === 'registrar'){
+          idventa = parseInt(event.target.dataset.idventa);
+          const parametros = new URLSearchParams();
+          parametros.append("operacion","obtener");
+          parametros.append("idventa", idventa);
+
+          fetch("../controller/detalleV.controller.php",{
+            method: 'POST',
+            body: parametros
+          })
+            .then(response => response.json())
+            .then(datos => {
+              d_mesa.value = datos.numMesa;
+              
+              d_venta.addEventListener("click", registrarDetalle);
+              modal2.toggle();
+            })  
+        }
+      })
 
       function updates(){
         if(confirm("Estas seguero de actualizar")){
@@ -312,14 +400,10 @@ $datoID = json_encode($_SESSION['login']);
         if(confirm("estas seguro de guardar?")){
           const parametros = new URLSearchParams();
           parametros.append("operacion","registrarDE");
-
-          parametros.append("idventa", document.querySelector("#venta").value);
-          parametros.append("idclientes", document.querySelector("#cliente").value);
-          parametros.append("PrecioUni", document.querySelector("#precio").value);
-          parametros.append("cantidad", document.querySelector("#cantidad").value);
-          parametros.append("precioTotal", document.querySelector("#total").value);
-          parametros.append("idtipopago", document.querySelector("#tipo").value);
-          parametros.append("idcomprobante", document.querySelector("#comprobante").value);
+          parametros.append("idventa", idventa);
+          parametros.append("cantidad", cantidad.value);
+          parametros.append("idmenu", selectMenu.value);
+          parametros.append("total", total.value);
 
           fetch("../controller/detalleV.controller.php" ,{
             method:'POST',
@@ -329,7 +413,8 @@ $datoID = json_encode($_SESSION['login']);
           .then(datos => {
             console.log(datos);
             if(datos.status){
-              document.querySelector("#formulario-Dventa").reset();
+              alert("Datos guardados correctamente")
+              document.querySelector("#formulario-Venta-detalle").reset();
             }
           })
         }
@@ -355,6 +440,26 @@ $datoID = json_encode($_SESSION['login']);
         });
       }
 
+      function listarCate(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","listarCate");
+
+        fetch("../controller/Ventas.controller.php", {
+          method: 'POST',
+          body: parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          selectCategor.innerHTML = "<option value=''>Seleccione</option>";
+          datos.forEach(element => {
+            let copcion3 = `
+              <option value='${element.idcategoria}'>${element.categoria}</option> 
+            `;
+            selectCategor.innerHTML += copcion3;
+          });
+        });
+      }
+      
       function listarVentas(){
         const parametros = new URLSearchParams();
         parametros.append("operacion", "listarVenta")
@@ -380,7 +485,7 @@ $datoID = json_encode($_SESSION['login']);
                 <td>${element.totalpagar}</td>
                 <td>${element.estadomesa}</td>
                 <td>
-                  <a href='#' class='eliminar' data-idventa='${element.idventa}'>Registrar</a>
+                  <a href='#' type='button' class='registrar' data-idventa='${element.idventa}'>Registrar</a>
                   <a href='#' type='button' class='editar' data-idventa='${element.idventa}'>editar</a>  
                 </td>
               </tr>`
@@ -420,10 +525,51 @@ $datoID = json_encode($_SESSION['login']);
         });
       }
 
+      function listarMenu(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion", "listarMenu");
+        parametros.append("idcat", selectCategor.value);
+        fetch("../controller/Ventas.controller.php", {
+          method : 'POST',
+          body:parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          selectMenu.innerHTML = "<option value=''>Seleccione</option>"
+          datos.forEach(element => {
+            let copcion4 = `
+              <option value='${element.idmenu}'>${element.menu}</option> 
+            `;
+            selectMenu.innerHTML += copcion4;  
+          });
+           
+        });
+      }
+      
+      function datosmenu(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion", "datosmenu");
+        parametros.append("idmenu", selectMenu.value);
+        fetch("../controller/Ventas.controller.php", {
+          method : 'POST',
+          body:parametros
+        })
+        .then(response => response.json())
+        .then(datos => {
+          console.log(datos);
+          datos.forEach(element => {
+            precio.value = element.precio; 
+          });
+        });
+      }
+
       listarVentas();
       listardeVentas();
       listarCliente();
+      listarCate();
       r_venta.addEventListener("click", registrarV);
+      selectCategor.addEventListener("change", listarMenu);
+      selectMenu.addEventListener("change", datosmenu);
     });
   </script>
   
