@@ -337,3 +337,14 @@ SELECT * FROM categorias
 CALL spu_listarGrafico()
 
 
+DELIMITER $$
+CREATE PROCEDURE spu_listarGrafico2()
+BEGIN
+	SELECT usuarios.nombreusuario,
+	COUNT(ventas.idventa) 'Total'
+	FROM ventas
+	INNER JOIN usuarios ON usuarios.idusuario = ventas.idusuario
+	GROUP BY usuarios.idusuario;
+END$$
+
+CALL spu_listarGrafico2()

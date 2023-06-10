@@ -55,6 +55,7 @@ $datoID = json_encode($_SESSION['login']);
     <div class="row">
       <div class="col-md-3">
         <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal-registrar-venta" type="button">Registrar Venta</button>
+        <button class="btn btn-dark" id="actualizar">Actualizar grafico</button>
       </div>
     </div>
     <div class="row">
@@ -82,14 +83,14 @@ $datoID = json_encode($_SESSION['login']);
     </div>
     <div class="row">
       <div class="col-md-10">
-        <canvas id="grafico2"></canvas>
+        <canvas id="grafico2">rrrrrrrr</canvas>
       </div>
     </div>
   </div>
   <div class="mt-3">
     <div class="row">
       <div class="col-md-6">
-        <canvas id="grafico1"></canvas>
+        <canvas id="grafico1">hhhh</canvas>
       </div>
       
     </div>
@@ -275,7 +276,6 @@ $datoID = json_encode($_SESSION['login']);
       </div>
     </div>
   </div>
-
   <script>
 
     document.addEventListener("DOMContentLoaded", () =>{
@@ -283,6 +283,9 @@ $datoID = json_encode($_SESSION['login']);
       const modal = new bootstrap.Modal(document.querySelector("#modal-actualizar-venta"));
       const modal2 = new bootstrap.Modal(document.querySelector("#modal-registrar-deventa"));
 
+      
+      const lienzo = document.getElementById("grafico2");
+      const btActualizar = document.querySelector("#actualizar")
       const selectcliente = document.querySelector("#cliente");
       const selectCategor = document.querySelector("#d-catego");
       const selectMenu = document.querySelector("#d-menu");
@@ -300,6 +303,46 @@ $datoID = json_encode($_SESSION['login']);
       const t_venta = document.querySelector("#t-venta");
       const r_venta = document.querySelector("#r-venta");
       const d_venta = document.querySelector("#d-venta");
+
+      const graficoBarras = new Chart(lienzo, {
+        type: 'pie',
+        data: {
+          label: [],
+          datasets: [
+            {
+              label: 'Tipo de platos',
+              backgroundColor: ['#FF5733','#ED92F4','#92E6F4'],
+              data: []
+            }
+          ]
+        }
+      });
+
+      function renderGrafico(coleccion=[]){
+        let etiqueta = [];
+        let datos = [];
+        coleccion.forEach(element => {
+          etiqueta.push(element.categoria);
+          datos.push(element.Total);
+        });
+        graficoBarras.data.labels = etiqueta;
+        graficoBarras.data.datasets[0].data = datos;
+        graficoBarras.update();
+      }
+
+      function loadGrafico(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","grafico1");
+
+        fetch(`../controller/grafico.controller.php`,{
+          method: 'POST',
+          body: parametros
+        })
+        .then(respuesta => respuesta.json())
+        .then(datos => {
+          renderGrafico(datos);
+        })
+      }
 
 
       cuerpo.addEventListener("click", (event) => {
@@ -567,6 +610,7 @@ $datoID = json_encode($_SESSION['login']);
       listardeVentas();
       listarCliente();
       listarCate();
+      btActualizar.addEventListener("click",loadGrafico);
       r_venta.addEventListener("click", registrarV);
       selectCategor.addEventListener("change", listarMenu);
       selectMenu.addEventListener("change", datosmenu);

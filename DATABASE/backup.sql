@@ -52,7 +52,7 @@ CREATE TABLE `detalleventas` (
   KEY `fk_venta_d` (`idventa`),
   CONSTRAINT `fk_idmenu_d` FOREIGN KEY (`idmenu`) REFERENCES `menus` (`idmenu`),
   CONSTRAINT `fk_venta_d` FOREIGN KEY (`idventa`) REFERENCES `ventas` (`idventa`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `detalleventas` */
 
@@ -65,7 +65,8 @@ insert  into `detalleventas`(`iddetalleventa`,`idventa`,`idmenu`,`cantidad`,`est
 (6,2,12,1,'1',15.00),
 (7,3,2,2,'1',20.00),
 (8,3,3,3,'1',60.00),
-(9,3,2,3,'1',30.00);
+(9,3,2,3,'1',30.00),
+(10,1,3,2,'1',40.00);
 
 /*Table structure for table `menus` */
 
@@ -198,7 +199,7 @@ CREATE TABLE `ventas` (
   KEY `fk_idusu_v` (`idusuario`),
   CONSTRAINT `fk_idcliente` FOREIGN KEY (`idcliente`) REFERENCES `personas` (`idpersona`),
   CONSTRAINT `fk_idusu_v` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `ventas` */
 
@@ -207,7 +208,9 @@ insert  into `ventas`(`idventa`,`idusuario`,`numMesa`,`idcliente`,`tipopago`,`co
 (2,1,'2',5,'Efectivo','Boleta','2023-06-07',45.00,'D'),
 (3,2,'5',4,'Yape','Factura','2023-06-07',110.00,'D'),
 (4,2,'6',NULL,NULL,NULL,'2023-06-07',NULL,'O'),
-(5,2,'3',NULL,NULL,NULL,'2023-06-07',NULL,'O');
+(5,2,'3',NULL,NULL,NULL,'2023-06-07',NULL,'O'),
+(6,2,'3',NULL,NULL,NULL,'2023-06-07',NULL,'O'),
+(7,2,'3',NULL,NULL,NULL,'2023-06-09',NULL,'O');
 
 /* Procedure structure for procedure `reporte_deusuario` */
 
@@ -267,6 +270,22 @@ BEGIN
 	INNER JOIN menus ON menus.idmenu = detalleventas.idmenu
 	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
 	GROUP BY categorias.idcategoria;
+END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `spu_listarGrafico2` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `spu_listarGrafico2` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listarGrafico2`()
+BEGIN
+	SELECT usuarios.nombreusuario,
+	COUNT(ventas.idventa) 'Total'
+	FROM ventas
+	INNER JOIN usuarios ON usuarios.idusuario = ventas.idusuario
+	GROUP BY usuarios.idusuario;
 END */$$
 DELIMITER ;
 
