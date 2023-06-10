@@ -56,7 +56,8 @@ CREATE TABLE USUARIOS
 
 INSERT INTO usuarios (idpersona, idturno,nombreusuario, claveacceso) VALUES 
 (1,1,'jimena28','123456'),
-(2,1,'perla23','123456');
+(2,2,'perla23','123456');
+SELECT * FROM usuarios
 
 DELIMITER $$
 CREATE PROCEDURE spu_login
@@ -146,8 +147,8 @@ CREATE TABLE VENTAS
 
 
 INSERT INTO ventas (idusuario,numMesa)VALUES
-(1,'1'),
-(1,'2');
+	(1,'1'),
+	(1,'2');
 
 SELECT * FROM detalleventas
 
@@ -230,7 +231,7 @@ BEGIN
 	SELECT menus.idmenu,categorias.categoria, menus.menu, menus.precio
 	FROM menus
 	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
-	WHERE menus.idcategoria = 1;
+	WHERE menus.idcategoria = _idcate;
 	
 END$$
 
@@ -263,6 +264,21 @@ END $$
 SELECT * FROM detalleventas
 
 CALL spu_listar_deventa(1);
+
+DELIMITER $$
+CREATE PROCEDURE spu_listardeVenta()
+BEGIN
+	SELECT iddetalleventa, turnos.turno,ventas.numMesa, categorias.categoria, personas.nombres, personas.apellidos,
+	menus.precio, menus.menu, detalleventas.cantidad, ventas.totalpagar, ventas.tipopago, ventas.comprobante
+	FROM detalleventas
+	INNER JOIN ventas  ON ventas.idventa = detalleventas.idventa
+	INNER JOIN personas ON personas.idpersona = ventas.idcliente
+	INNER JOIN menus ON menus.idmenu = detalleventas.idmenu
+	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
+	INNER JOIN usuarios ON usuarios.idusuario = ventas.idusuario
+	INNER JOIN turnos ON turnos.idturno = usuarios.idturno;
+END$$
+
 
 
 SELECT * FROM detalleventas
@@ -308,10 +324,11 @@ CREATE PROCEDURE reporte_deusuario
 	IN  _usu INT
 )
 BEGIN 
-	SELECT idventa, usuarios.nombreusuario, tipopago,comprobante,totalpagar,
+	SELECT idventa, usuarios.nombreusuario, turnos.turno, tipopago,comprobante,totalpagar,
 	numMesa, fechaventa
 	FROM ventas
 	INNER JOIN usuarios ON usuarios.idusuario = ventas.idusuario
+	INNER JOIN turnos ON turnos.idturno = usuarios.idturno
 	WHERE ventas.idusuario = _usu
 	ORDER BY idventa DESC;
 END $$
@@ -319,6 +336,18 @@ END $$
 CALL reporte_deusuario(1);
 
 -- reporte 2
+DELIMITER $$
+CREATE PROCEDURE reporte_deplatos
+(
+	IN  _plato INT
+)
+BEGIN 
+	SELECT idmenu,precio,categorias.categoria,menu
+	FROM menus
+	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
+	WHERE menus.idcategoria = 4
+	ORDER BY iddetalleventa DESC;
+END $$
 
 
 -- grafico

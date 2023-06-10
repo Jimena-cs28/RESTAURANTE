@@ -86,7 +86,7 @@
 
       function listarDeVentas(){
         const parametros = new URLSearchParams();
-        parametros.append("operacion", "listarDeVenta")
+        parametros.append("operacion", "listardetalleventas")
 
         fetch("../controller/detalleV.controller.php", {
           method : "POST",
@@ -100,15 +100,18 @@
           datos.forEach(element => {
             const opcion = `
               <tr>
-                <td>${element.iddeventa}</td>
-                <td>${element.nombreusuario}</td>
+                <td>${element.iddetalleventa}</td>
                 <td>${element.turno}</td>
                 <td>${element.numMesa}</td>
+                <td>${element.categoria}</td>
+                <td>${element.nombres}</td>
+                <td>${element.apellidos}</td>
+                <td>${element.precio}</td>
+                <td>${element.menu}</td>
+                <td>${element.cantidad}</td>
+                <td>${element.totalpagar}</td>
                 <td>${element.tipopago}</td>
                 <td>${element.comprobante}</td>
-                <td>${element.fechaventa}</td>
-                <td>${element.totalpagar}</td>
-                <td>${element.estadomesa}</td>
               </tr>
             `;
             cuerpo.innerHTML +=opcion;

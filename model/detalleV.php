@@ -93,4 +93,17 @@ class DetalleV extends Conexion{
     }
     return $respuesta;
   }
+
+  public function listardetalleventas(){
+    try{
+      $consulta = $this->acceso->prepare("CALL spu_listardeVenta()");
+      $consulta->execute();
+
+      $datosObtenidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
+      return $datosObtenidos;
+    }
+    catch(Exception $e){
+      die($e->getMessage());
+    }
+  }
 }

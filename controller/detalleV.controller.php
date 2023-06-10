@@ -11,6 +11,13 @@ if(isset($_POST['operacion'])){
       echo json_encode($datos);
     }
   }
+  if ($_POST['operacion'] == 'listardetalleventas'){
+    $datos = $deventas->listardetalleventas();
+    if ($datos){
+      echo json_encode($datos);
+    }
+  }
+
 
   if($_POST['operacion'] == 'eliminar'){
     $respuesta = $deventas->eliminar($_POST['idventa']);

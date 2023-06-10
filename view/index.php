@@ -82,16 +82,17 @@ $datoID = json_encode($_SESSION['login']);
       </div>
     </div>
     <div class="row">
-      <div class="col-md-10">
-        <canvas id="grafico2">rrrrrrrr</canvas>
+      <div class="col-md-6">
+        <canvas id="grafico2"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="grafico1"></canvas>
       </div>
     </div>
   </div>
   <div class="mt-3">
     <div class="row">
-      <div class="col-md-6">
-        <canvas id="grafico1">hhhh</canvas>
-      </div>
+      
       
     </div>
   </div>
@@ -250,17 +251,17 @@ $datoID = json_encode($_SESSION['login']);
             <div class="row">
               <div class="col-md-6">
                 <label for="d-preciouni" class="form-label">Precio unitario</label>
-                <input type="text" id="d-preciouni" class="form-control" disabled>
+                <input type="text" id="d-preciouni" class="form-control" disabled step="0.01" oninput="calcular()">
               </div>
               <div class="col-md-6">
                 <label for="d-cantidad" class="form-label">Cantidad</label>
-                <input type="text" id="d-cantidad" class="form-control">
+                <input type="text" id="d-cantidad" class="form-control" step="0.01" oninput="calcular()">
               </div>              
             </div>
             <div class="row">
               <div class="col-md-6">
                 <label for="d-total" class="form-label">total</label>
-                <input type="number" id="d-total" class="form-control">
+                <input type="number" id="d-total" class="form-control" step="0.01">
               </div>
             </div>
             <div class="row">
@@ -277,6 +278,15 @@ $datoID = json_encode($_SESSION['login']);
     </div>
   </div>
   <script>
+    function calcular(){
+      try{
+        var precio = parseFloat(document.getElementById("d-preciouni").value) || 0,
+        cantidad = parseFloat(document.getElementById("d-cantidad").value) || 0;
+        document.getElementById("d-total").value = precio * cantidad;
+      }catch{
+
+      }
+    }
 
     document.addEventListener("DOMContentLoaded", () =>{
       let idventa = '';
@@ -285,6 +295,7 @@ $datoID = json_encode($_SESSION['login']);
 
       
       const lienzo = document.getElementById("grafico2");
+      const lienzo2 = document.getElementById("grafico1");
       const btActualizar = document.querySelector("#actualizar")
       const selectcliente = document.querySelector("#cliente");
       const selectCategor = document.querySelector("#d-catego");
@@ -305,7 +316,7 @@ $datoID = json_encode($_SESSION['login']);
       const d_venta = document.querySelector("#d-venta");
 
       const graficoBarras = new Chart(lienzo, {
-        type: 'pie',
+        type: 'bar',
         data: {
           label: [],
           datasets: [
@@ -344,6 +355,45 @@ $datoID = json_encode($_SESSION['login']);
         })
       }
 
+      const grafico2 = new Chart(lienzo2, {
+        type: 'bar',
+        data: {
+          label: [],
+          datasets: [
+            {
+              label: 'Usuarios',
+              backgroundColor: ['#92F4AE','#9298F4'],
+              data: []
+            }
+          ]
+        }
+      });
+
+      function renderGrafico2(coleccion=[]){
+        let etiquetas = [];
+        let dato = [];
+        coleccion.forEach(element => {
+          etiquetas.push(element.nombreusuario);
+          dato.push(element.Total);
+        });
+        grafico2.data.labels = etiquetas;
+        grafico2.data.datasets[0].data = dato;
+        grafico2.update();
+      }
+
+      function loadGrafico2(){
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","Grafico2");
+
+        fetch(`../controller/grafico.controller.php`,{
+          method: 'POST',
+          body: parametros
+        })
+        .then(respuesta => respuesta.json())
+        .then(datos => {
+          renderGrafico2(datos);
+        })
+      }
 
       cuerpo.addEventListener("click", (event) => {
         if(event.target.classList[0] === 'editar'){
@@ -434,6 +484,7 @@ $datoID = json_encode($_SESSION['login']);
             if(datos.status){
               listarVentas();
               document.querySelector("#formulario-Venta-registro").reset();
+              modal2.hide();
             }
           })
         }
@@ -611,6 +662,7 @@ $datoID = json_encode($_SESSION['login']);
       listarCliente();
       listarCate();
       btActualizar.addEventListener("click",loadGrafico);
+      btActualizar.addEventListener("click",loadGrafico2);
       r_venta.addEventListener("click", registrarV);
       selectCategor.addEventListener("change", listarMenu);
       selectMenu.addEventListener("change", datosmenu);

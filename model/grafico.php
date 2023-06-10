@@ -22,7 +22,7 @@ class Grafico extends Conexion{
     }
     public function Grafico2(){
         try{
-            $consulta = $this->conexion->prepare("CALL spu_listarTurno()");
+            $consulta = $this->conexion->prepare("CALL spu_listarGrafico2()");
             $consulta->execute();
             return $consulta->fetchAll(PDO::FETCH_ASSOC);
       

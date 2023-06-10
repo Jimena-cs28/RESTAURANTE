@@ -36,9 +36,9 @@
       </div>
     </div>
   </nav>
-  <div class="">
+  <div class="container">
     <div class="row mt-3 mb-3">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-secondary text-light">
             Filtra tus turno
@@ -59,35 +59,15 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-success text-light">
-              Filtra Tipos de Plato
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-8">
-                  <select name="turno" id="plato" class="form-select">
-                    <option value="">seleccione</option>
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <div class="d-grid">
-                    <button type="button" class="btn btn-outline-dark  btn-sm mt-1" id="exportarp">Exportar Pdf</button>
-                  </div>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
     <div class="container mt-4">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
           <table class="table table-sm table-striped" id="tabla-turno">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>usuario</th>
+                <th>Turno</th>
                 <th>tipo de pago</th>
                 <th>comprobante</th>
                 <th>total</th>
@@ -100,23 +80,7 @@
             </tbody>
           </table>
         </div>
-        <div class="col-md-6">
-          <table class="table table-sm table-striped" id="tabla-plato">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Turno</th>
-                <th>Usuario</th>
-                <th>Mesa</th>
-                <th>Plato</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- asincrono -->
-            </tbody>
-          </table>
-        </div>
+        
       </div>
     </div>
     <script>
@@ -124,8 +88,6 @@
         const selecUsuario= document.querySelector("#usuario");
         const selectPlato = document.querySelector("#plato");
         const tabla = document.querySelector("#tabla-turno");
-        const tabla2 = document.querySelector("#tabla-plato");
-        const cuerpo2 = tabla2.querySelector("tbody");
         const cuerpo = tabla.querySelector("tbody");
 
         const exportarP = document.querySelector("#exportarp");
@@ -150,24 +112,6 @@
           });
         }
         
-        function listarTplato(){
-          const parametros = new URLSearchParams();
-          parametros.append("operacion", "listarTPlato");
-
-          fetch('../controller/reporte.controller.php',{
-            method: 'POST',
-            body: parametros
-          })
-          .then(response => response.json())
-          .then(datos => {
-            datos.forEach(element => {
-              const optiontag = document.createElement("option");
-              optiontag.value = element.idTplato;
-              optiontag.text  = element.tipo;
-              selectPlato.appendChild(optiontag);
-            });
-          });
-        }
         
         function obtenerVenta(){
           const parametros = new URLSearchParams();
@@ -186,6 +130,7 @@
               <tr>
                 <td>${element.idventa}</td>  
                 <td>${element.nombreusuario}</td>  
+                <td>${element.turno}</td>  
                 <td>${element.tipopago}</td>  
                 <td>${element.comprobante}</td>  
                 <td>${element.totalpagar}</td>  
@@ -201,38 +146,6 @@
             alert('No encontramos datos');
           });
         }
-
-        function obtenerVenta1(){
-          const parametros = new URLSearchParams();
-          parametros.append("operacion","listarVenta1");
-          parametros.append("plato", parseInt(selectPlato.value));
-
-          fetch('../controller/reporte.controller.php',{
-            method: 'POST',
-            body: parametros
-          })
-          .then(response => response.json())
-          .then(datos => {
-            cuerpo2.innerHTML = ``;
-            datos.forEach(element =>{
-              const venta1 = `
-              <tr>
-                <td>${element.idventa}</td>  
-                <td>${element.tipo}</td>  
-                <td>${element.turno}</td>  
-                <td>${element.nombreusu}</td>  
-                <td>${element.numMesa}</td>  
-                <td>${element.plato}</td>
-              </tr>
-              `;
-              cuerpo2.innerHTML += venta1;
-            });
-          })
-          .catch(error => {
-            cuerpo2.innerHTML = ``;
-            alert('No encontramos datos');
-          });
-        }
         
         function PDFusuario(){
           const parametros = new URLSearchParams();
@@ -240,17 +153,11 @@
           window.open(`../reports/turno.report.php?${parametros}`,'_blank');
         }
         
-        function PDFPlato(){
-          const parametros = new URLSearchParams();
-          parametros.append("plato", parseInt(selectPlato.value));
-          window.open(`../reports/plato.report.php?${parametros}`,'_blank');
-        }
+
         
         //evento
         selecUsuario.addEventListener("change", obtenerVenta);
-        selectPlato.addEventListener("change", obtenerVenta1);
         exportarT.addEventListener("click", PDFusuario);
-        exportarP.addEventListener("click",PDFPlato);
 
         //este no
         listarUsuario();

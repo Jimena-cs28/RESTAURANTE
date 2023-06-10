@@ -52,7 +52,7 @@ CREATE TABLE `detalleventas` (
   KEY `fk_venta_d` (`idventa`),
   CONSTRAINT `fk_idmenu_d` FOREIGN KEY (`idmenu`) REFERENCES `menus` (`idmenu`),
   CONSTRAINT `fk_venta_d` FOREIGN KEY (`idventa`) REFERENCES `ventas` (`idventa`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `detalleventas` */
 
@@ -64,9 +64,16 @@ insert  into `detalleventas`(`iddetalleventa`,`idventa`,`idmenu`,`cantidad`,`est
 (5,2,7,1,'1',20.00),
 (6,2,12,1,'1',15.00),
 (7,3,2,2,'1',20.00),
-(8,3,3,3,'1',60.00),
-(9,3,2,3,'1',30.00),
-(10,1,3,2,'1',40.00);
+(8,1,2,3,'1',30.00),
+(9,1,3,3,'1',60.00),
+(10,3,3,2,'1',40.00),
+(11,4,16,2,'1',8.00),
+(12,6,16,2,'1',8.00),
+(13,5,18,3,'1',6.00),
+(14,6,6,3,'1',45.00),
+(15,5,11,4,'1',40.00),
+(16,7,11,4,'1',40.00),
+(17,6,6,1,'1',15.00);
 
 /*Table structure for table `menus` */
 
@@ -177,8 +184,8 @@ CREATE TABLE `usuarios` (
 /*Data for the table `usuarios` */
 
 insert  into `usuarios`(`idusuario`,`idpersona`,`idturno`,`nombreusuario`,`claveacceso`,`estado`) values 
-(1,1,1,'jimena28','$2y$10$yG1Mk28HxCgS1BywcuBfYuvc3STMlR3f771kclJBfyh.CcWGJl/Xa','1'),
-(2,2,1,'perla23','$2y$10$yG1Mk28HxCgS1BywcuBfYuvc3STMlR3f771kclJBfyh.CcWGJl/Xa','1');
+(1,1,1,'jimena28','123456','1'),
+(2,2,2,'perla23','$2y$10$yG1Mk28HxCgS1BywcuBfYuvc3STMlR3f771kclJBfyh.CcWGJl/Xa','1');
 
 /*Table structure for table `ventas` */
 
@@ -199,18 +206,20 @@ CREATE TABLE `ventas` (
   KEY `fk_idusu_v` (`idusuario`),
   CONSTRAINT `fk_idcliente` FOREIGN KEY (`idcliente`) REFERENCES `personas` (`idpersona`),
   CONSTRAINT `fk_idusu_v` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `ventas` */
 
 insert  into `ventas`(`idventa`,`idusuario`,`numMesa`,`idcliente`,`tipopago`,`comprobante`,`fechaventa`,`totalpagar`,`estadomesa`) values 
-(1,1,'1',4,'Plin','Factura','2023-06-07',72.00,'D'),
-(2,1,'2',5,'Efectivo','Boleta','2023-06-07',45.00,'D'),
-(3,2,'5',4,'Yape','Factura','2023-06-07',110.00,'D'),
-(4,2,'6',NULL,NULL,NULL,'2023-06-07',NULL,'O'),
-(5,2,'3',NULL,NULL,NULL,'2023-06-07',NULL,'O'),
-(6,2,'3',NULL,NULL,NULL,'2023-06-07',NULL,'O'),
-(7,2,'3',NULL,NULL,NULL,'2023-06-09',NULL,'O');
+(1,1,'1',4,'Yape','Boleta','2023-06-09',162.00,'D'),
+(2,1,'2',5,'Tarjeta de credito','Factura','2023-06-09',45.00,'D'),
+(3,2,'3',4,'Efectivo','Factura','2023-06-09',60.00,'D'),
+(4,2,'4',7,'Plin','Boleta','2023-06-09',8.00,'D'),
+(5,2,'6',4,'Yape','Factura','2023-06-09',46.00,'D'),
+(6,2,'5',3,'Yape','Boleta','2023-06-09',68.00,'D'),
+(7,2,'4',NULL,NULL,NULL,'2023-06-09',NULL,'O'),
+(8,2,'3',NULL,NULL,NULL,'2023-06-09',NULL,'O'),
+(9,2,'4',NULL,NULL,NULL,'2023-06-09',NULL,'O');
 
 /* Procedure structure for procedure `reporte_deusuario` */
 
@@ -222,10 +231,11 @@ DELIMITER $$
 	IN  _usu INT
 )
 BEGIN 
-	SELECT idventa, usuarios.nombreusuario, tipopago,comprobante,totalpagar,
+	SELECT idventa, usuarios.nombreusuario, turnos.turno, tipopago,comprobante,totalpagar,
 	numMesa, fechaventa
 	FROM ventas
 	INNER JOIN usuarios ON usuarios.idusuario = ventas.idusuario
+	inner join turnos on turnos.idturno = usuarios.idturno
 	WHERE ventas.idusuario = _usu
 	ORDER BY idventa DESC;
 END */$$
@@ -254,6 +264,26 @@ BEGIN
 	estadomesa = 'D'
 	WHERE idventa = _idventa;
 END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `spu_listardeVenta` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `spu_listardeVenta` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listardeVenta`()
+begin
+	select iddetalleventa, turnos.turno,ventas.numMesa, categorias.categoria, personas.nombres, personas.apellidos,
+	menus.precio, menus.menu, detalleventas.cantidad, ventas.totalpagar, ventas.tipopago, ventas.comprobante
+	from detalleventas
+	INNER JOIN ventas  ON ventas.idventa = detalleventas.idventa
+	inner join personas on personas.idpersona = ventas.idcliente
+	INNER JOIN menus ON menus.idmenu = detalleventas.idmenu
+	inner join categorias on categorias.idcategoria = menus.idcategoria
+	inner join usuarios on usuarios.idusuario = ventas.idusuario
+	inner join turnos on turnos.idturno = usuarios.idturno;
+end */$$
 DELIMITER ;
 
 /* Procedure structure for procedure `spu_listarGrafico` */
@@ -337,7 +367,7 @@ BEGIN
 	SELECT menus.idmenu,categorias.categoria, menus.menu, menus.precio
 	FROM menus
 	INNER JOIN categorias ON categorias.idcategoria = menus.idcategoria
-	WHERE menus.idcategoria = 1;
+	WHERE menus.idcategoria = _idcate;
 	
 END */$$
 DELIMITER ;
